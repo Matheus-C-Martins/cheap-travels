@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "scrape": "node services/scraper.js"
+    "scrape": "node services/scraper.js",
+    "postinstall": "echo 'Skipping Puppeteer Chrome download - using system Chrome'"
   },
   "keywords": [
     "travel",

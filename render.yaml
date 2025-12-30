@@ -1,24 +1,27 @@
-# Configuração de deploy para Render.com
 services:
-  # Backend API
   - type: web
     name: cheap-travels-api
-    runtime: node
+    env: node
     region: oregon
     plan: free
-    rootDir: api
-    buildCommand: cd /opt/render/project/src/api && npm install
-    startCommand: npm start
+    buildCommand: cd api && npm install
+    startCommand: cd api && npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 3001
-      - key: SCRAPE_INTERVAL_MINUTES
-        value: 30
-      - key: MAX_CONCURRENT_SCRAPES
-        value: 2
-      - key: CACHE_TTL_SECONDS
-        value: 300
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: true
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/chromium-browser
     healthCheckPath: /api/health
-    autoDeploy: true
+    
+  - type: web
+    name: cheap-travels-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
