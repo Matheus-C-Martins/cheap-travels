@@ -11,6 +11,9 @@ export const translations = {
     favorites: 'Favorites',
     showFavorites: 'Show Favorites',
     showAll: 'Show All',
+    // Search
+    searchPlaceholder: 'Search destinations, cities, countries...',
+    resultsFound: 'results found',
     
     // Filters
     filterByType: 'Filter by Type',
@@ -70,6 +73,9 @@ export const translations = {
     favorites: 'Favoritos',
     showFavorites: 'Ver Favoritos',
     showAll: 'Ver Todos',
+    // Search
+    searchPlaceholder: 'Buscar destinos, cidades, pa\u00edses...',
+    resultsFound: 'resultados encontrados',
     
     // Filters
     filterByType: 'Filtrar por Tipo',
@@ -129,6 +135,9 @@ export const translations = {
     favorites: 'Favoris',
     showFavorites: 'Afficher Favoris',
     showAll: 'Tout Afficher',
+    // Search
+    searchPlaceholder: 'Rechercher des destinations, villes, pays...',
+    resultsFound: 'r\u00e9sultats trouv\u00e9s',
     
     // Filters
     filterByType: 'Filtrer par Type',
@@ -188,6 +197,9 @@ export const translations = {
     favorites: 'Favoritos',
     showFavorites: 'Ver Favoritos',
     showAll: 'Ver Todos',
+    // Search
+    searchPlaceholder: 'Buscar destinos, ciudades, pa\u00edses...',
+    resultsFound: 'resultados encontrados',
     
     // Filters
     filterByType: 'Filtrar por Tipo',
@@ -247,6 +259,9 @@ export const translations = {
     favorites: 'Favoriten',
     showFavorites: 'Favoriten Anzeigen',
     showAll: 'Alle Anzeigen',
+    // Search
+    searchPlaceholder: 'Reiseziele, St\u00e4dte, L\u00e4nder suchen...',
+    resultsFound: 'Ergebnisse gefunden',
     
     // Filters
     filterByType: 'Nach Typ filtern',

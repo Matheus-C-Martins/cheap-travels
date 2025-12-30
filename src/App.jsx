@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import FilterBar from './components/FilterBar';
 import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import SearchBar from './components/SearchBar';
+import ScrollToTop from './components/ScrollToTop';
 import { useTranslation } from './hooks/useTranslation';
 import { useFavorites } from './hooks/useFavorites';
 import './App.css';
@@ -16,6 +18,7 @@ function App() {
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('discount');
   const [showFavorites, setShowFavorites] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [stats, setStats] = useState({ flights: 0, cruises: 0 });
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
@@ -78,6 +81,18 @@ function App() {
     // Favorites filter
     if (showFavorites) {
       result = result.filter(deal => isFavorite(deal.id));
+    // Search filter
+    if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+      result = result.filter(deal => {
+        const title = deal.title?.toLowerCase() || '';
+        const destination = deal.destination?.toLowerCase() || '';
+        const origin = deal.origin?.toLowerCase() || '';
+        
+        return title.includes(search) || 
+               destination.includes(search) || 
+               origin.includes(search);
+      });
     }
 
     // Type filter
@@ -174,6 +189,22 @@ function App() {
                 favoritesCount={favoritesCount}
                 t={t}
               />
+              <>
+                <SearchBar 
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  t={t}
+                  resultsCount={filteredDeals.length}
+                />
+                
+                <FilterBar
+                  filter={filter}
+                  setFilter={setFilter}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  t={t}
+                />
+              </>
             )}
             
             {loading && loadingTimeout && (
@@ -212,6 +243,8 @@ function App() {
           </div>
         </div>
       </footer>
+      
+      <ScrollToTop />
     </div>
   );
 }
