@@ -33,10 +33,6 @@ body {
   /* Tipografia */
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  
-  /* Layout */
-  --header-height: 88px;
-  --header-height-mobile: 140px;
 }
 
 body {
@@ -66,11 +62,9 @@ body {
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border);
   padding: 1.5rem 0;
-  position: sticky;
-  top: 0;
+  /* Remover sticky temporariamente para debug */
+  position: relative;
   z-index: 100;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow-sm);
 }
 
@@ -150,8 +144,6 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  /* Importante: compensa a altura do header sticky */
-  margin-top: 0;
 }
 
 /* Loading States */
