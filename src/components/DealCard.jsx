@@ -1,11 +1,19 @@
 import PropTypes from 'prop-types';
+import FavoriteButton from './FavoriteButton';
 import './DealCard.css';
 
-function DealCard({ deal, t }) {
+function DealCard({ deal, t, isFavorite, onToggleFavorite }) {
   const isFlight = deal.type === 'flight';
   
   return (
     <div className="deal-card">
+      {/* Favorite Button */}
+      <FavoriteButton 
+        dealId={deal.id}
+        isFavorite={isFavorite}
+        onToggle={onToggleFavorite}
+      />
+      
       {/* Badge de Desconto */}
       <div className="discount-badge">
         <span className="discount-value">{deal.discount}%</span>
@@ -89,6 +97,7 @@ function DealCard({ deal, t }) {
 
 DealCard.propTypes = {
   deal: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     discount: PropTypes.number.isRequired,
     source: PropTypes.string.isRequired,
@@ -104,6 +113,8 @@ DealCard.propTypes = {
     url: PropTypes.string.isRequired,
   }).isRequired,
   t: PropTypes.func.isRequired,
+  isFavorite: PropTypes.bool.isRequired,
+  onToggleFavorite: PropTypes.func.isRequired,
 };
 
 export default DealCard;

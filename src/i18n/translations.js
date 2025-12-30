@@ -7,6 +7,11 @@ export const translations = {
     cruises: 'Cruises',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favorites',
+    showFavorites: 'Show Favorites',
+    showAll: 'Show All',
+    
     // Filters
     filterByType: 'Filter by Type',
     sortBy: 'Sort By',
@@ -60,6 +65,11 @@ export const translations = {
     flights: 'Voos',
     cruises: 'Cruzeiros',
     total: 'Total',
+    
+    // Favorites
+    favorites: 'Favoritos',
+    showFavorites: 'Ver Favoritos',
+    showAll: 'Ver Todos',
     
     // Filters
     filterByType: 'Filtrar por Tipo',
@@ -115,6 +125,11 @@ export const translations = {
     cruises: 'Croisi\u00e8res',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favoris',
+    showFavorites: 'Afficher Favoris',
+    showAll: 'Tout Afficher',
+    
     // Filters
     filterByType: 'Filtrer par Type',
     sortBy: 'Trier par',
@@ -169,6 +184,11 @@ export const translations = {
     cruises: 'Cruceros',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favoritos',
+    showFavorites: 'Ver Favoritos',
+    showAll: 'Ver Todos',
+    
     // Filters
     filterByType: 'Filtrar por Tipo',
     sortBy: 'Ordenar por',
@@ -222,6 +242,11 @@ export const translations = {
     flights: 'Fl\u00fcge',
     cruises: 'Kreuzfahrten',
     total: 'Gesamt',
+    
+    // Favorites
+    favorites: 'Favoriten',
+    showFavorites: 'Favoriten Anzeigen',
+    showAll: 'Alle Anzeigen',
     
     // Filters
     filterByType: 'Nach Typ filtern',

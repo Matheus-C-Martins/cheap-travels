@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import DealCard from './DealCard';
 import './DealsGrid.css';
 
-function DealsGrid({ deals, loading, t }) {
+function DealsGrid({ deals, loading, t, isFavorite, onToggleFavorite }) {
   if (loading) {
     return (
       <div className="skeleton-grid">
@@ -38,7 +38,13 @@ function DealsGrid({ deals, loading, t }) {
       
       <div className="deals-grid">
         {deals.map(deal => (
-          <DealCard key={deal.id} deal={deal} t={t} />
+          <DealCard 
+            key={deal.id} 
+            deal={deal} 
+            t={t}
+            isFavorite={isFavorite(deal.id)}
+            onToggleFavorite={onToggleFavorite}
+          />
         ))}
       </div>
     </div>
@@ -53,6 +59,8 @@ DealsGrid.propTypes = {
   ).isRequired,
   loading: PropTypes.bool.isRequired,
   t: PropTypes.func.isRequired,
+  isFavorite: PropTypes.func.isRequired,
+  onToggleFavorite: PropTypes.func.isRequired,
 };
 
 export default DealsGrid;
