@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import FilterBar from './components/FilterBar';
 import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
@@ -14,7 +14,7 @@ import './styles/accessibility.css';
 
 function App() {
   const { t, language, changeLanguage } = useTranslation();
-  const { favorites, toggleFavorite, isFavorite, favoritesCount } = useFavorites();
+  const { toggleFavorite, isFavorite, favoritesCount } = useFavorites();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
@@ -29,57 +29,77 @@ function App() {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-  const fetchDeals = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      setLoadingTimeout(false);
-
-      const timeoutId = setTimeout(() => {
-        setLoadingTimeout(true);
-      }, 10000);
-
-      const response = await fetch(`${API_URL}/deals`, {
-        signal: AbortSignal.timeout(15000)
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (!response.ok) {
-        throw new Error(`${t('errorTitle')}: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.success && Array.isArray(data.data)) {
-        setDeals(data.data);
-      } else {
-        throw new Error('Invalid data format');
-      }
-    } catch (err) {
-      console.error('Error fetching deals:', err);
-      
-      if (err.name === 'TimeoutError') {
-        setError(t('errorTimeoutMessage'));
-      } else if (err.message.includes('Failed to fetch')) {
-        setError(t('errorConnectionMessage'));
-      } else {
-        setError(err.message);
-      }
-      
-      setDeals([]);
-    } finally {
-      setLoading(false);
-      setLoadingTimeout(false);
-    }
-  }, [API_URL, t]);
-
+  // Fetch deals only once on mount and set up interval
   useEffect(() => {
-    fetchDeals();
-    const interval = setInterval(fetchDeals, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [fetchDeals]);
+    let isMounted = true;
+    let timeoutId;
+    
+    const fetchDeals = async () => {
+      if (!isMounted) return;
+      
+      try {
+        setLoading(true);
+        setError(null);
+        setLoadingTimeout(false);
 
+        timeoutId = setTimeout(() => {
+          if (isMounted) setLoadingTimeout(true);
+        }, 10000);
+
+        const response = await fetch(`${API_URL}/deals`, {
+          signal: AbortSignal.timeout(15000)
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (isMounted && data.success && Array.isArray(data.data)) {
+          setDeals(data.data);
+        } else if (isMounted) {
+          throw new Error('Invalid data format');
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        
+        console.error('Error fetching deals:', err);
+        
+        if (err.name === 'TimeoutError') {
+          setError('Request timeout. Server might be busy.');
+        } else if (err.message.includes('Failed to fetch')) {
+          setError('Connection error. Check your internet.');
+        } else {
+          setError(err.message);
+        }
+        
+        setDeals([]);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+          setLoadingTimeout(false);
+        }
+      }
+    };
+
+    // Initial fetch
+    fetchDeals();
+    
+    // Set up interval for periodic refresh (5 minutes)
+    const interval = setInterval(fetchDeals, 5 * 60 * 1000);
+    
+    // Cleanup
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [API_URL]); // Only depend on API_URL
+
+  // Filter and sort deals
   useEffect(() => {
     let result = [...deals];
 
@@ -115,15 +135,16 @@ function App() {
         case 'price':
           return a.currentPrice - b.currentPrice;
         case 'date':
-          return new Date(a.departureDate || a.departureDate) - new Date(b.departureDate || b.departureDate);
+          return new Date(a.departureDate) - new Date(b.departureDate);
         default:
           return 0;
       }
     });
 
     setFilteredDeals(result);
-  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite, searchTerm]);
+  }, [deals, filter, sortBy, showFavorites, isFavorite, searchTerm]);
 
+  // Calculate stats
   useEffect(() => {
     const flights = deals.filter(d => d.type === 'flight').length;
     const cruises = deals.filter(d => d.type === 'cruise').length;
@@ -131,7 +152,7 @@ function App() {
   }, [deals]);
 
   function handleRetry() {
-    fetchDeals();
+    window.location.reload();
   }
 
   return (
@@ -188,7 +209,7 @@ function App() {
               <span aria-hidden="true">⟳</span> {t('retryButton')}
             </button>
             <p className="error-hint">
-              <span aria-hidden="true">💡</span> <strong>{t('errorHint').split(':')[0]}:</strong> {t('errorHint').split(':')[1]}
+              <span aria-hidden="true">💡</span> {t('errorHint')}
             </p>
           </div>
         ) : (
