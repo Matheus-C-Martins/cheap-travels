@@ -1,45 +1,35 @@
-import PropTypes from 'prop-types';
 import './FilterBar.css';
 
-function FilterBar({ filter, setFilter, sortBy, setSortBy }) {
+function FilterBar({ filter, setFilter, sortBy, setSortBy, t }) {
   return (
     <div className="filter-bar">
       <div className="filter-group">
-        <label htmlFor="type-filter">Filtrar por tipo:</label>
+        <label>{t('filterByType')}</label>
         <select 
-          id="type-filter"
           value={filter} 
           onChange={(e) => setFilter(e.target.value)}
           className="filter-select"
         >
-          <option value="all">Todos</option>
-          <option value="flight">✈️ Voos</option>
-          <option value="cruise">🚢 Cruzeiros</option>
+          <option value="all">{t('all')}</option>
+          <option value="flight">{t('flight')}</option>
+          <option value="cruise">{t('cruise')}</option>
         </select>
       </div>
-      
+
       <div className="filter-group">
-        <label htmlFor="sort-select">Ordenar por:</label>
+        <label>{t('sortBy')}</label>
         <select 
-          id="sort-select"
           value={sortBy} 
           onChange={(e) => setSortBy(e.target.value)}
           className="filter-select"
         >
-          <option value="discount">Maior Desconto</option>
-          <option value="price">Menor Preço</option>
-          <option value="date">Data Mais Próxima</option>
+          <option value="discount">{t('discount')}</option>
+          <option value="price">{t('price')}</option>
+          <option value="date">{t('date')}</option>
         </select>
       </div>
     </div>
   );
 }
-
-FilterBar.propTypes = {
-  filter: PropTypes.string.isRequired,
-  setFilter: PropTypes.func.isRequired,
-  sortBy: PropTypes.string.isRequired,
-  setSortBy: PropTypes.func.isRequired,
-};
 
 export default FilterBar;

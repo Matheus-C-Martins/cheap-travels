@@ -1,141 +1,89 @@
-import PropTypes from 'prop-types';
 import './DealCard.css';
 
-function DealCard({ deal }) {
-  
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: deal.currency || 'BRL'
-    }).format(price);
-  };
-  
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Data não informada';
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
-  
-  const getDiscountClass = (discount) => {
-    if (discount >= 80) return 'discount-badge extreme';
-    if (discount >= 70) return 'discount-badge high';
-    if (discount >= 60) return 'discount-badge medium';
-    return 'discount-badge low';
-  };
-  
-  const savings = deal.originalPrice - deal.currentPrice;
+function DealCard({ deal, t }) {
+  const isFlight = deal.type === 'flight';
   
   return (
     <div className="deal-card">
-      <div className="deal-header">
-        <div className={getDiscountClass(deal.discount)}>
-          {deal.discount}% OFF
-        </div>
+      {/* Badge de Desconto */}
+      <div className="discount-badge">
+        <span className="discount-value">{deal.discount}%</span>
+        <span className="discount-label">{t('discount_label')}</span>
+      </div>
+
+      {/* Header */}
+      <div className="card-header">
         <div className="deal-type">
-          {deal.type === 'flight' ? '✈️ Voo' : '🚢 Cruzeiro'}
+          {isFlight ? '✈️' : '🚢'}
+        </div>
+        <div className="deal-source">{deal.source}</div>
+      </div>
+
+      {/* Título */}
+      <h3 className="deal-title">{deal.title}</h3>
+
+      {/* Detalhes */}
+      <div className="deal-details">
+        {isFlight ? (
+          <>
+            <div className="detail-item">
+              <span className="detail-icon">📍</span>
+              <span className="detail-text">{deal.origin} {t('to')} {deal.destination}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-icon">📅</span>
+              <span className="detail-text">{t('departure')}: {new Date(deal.departureDate).toLocaleDateString()}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-icon">✈️</span>
+              <span className="detail-text">{deal.stops === 0 ? t('nonstop') : `${deal.stops} ${t('stops')}`}</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="detail-item">
+              <span className="detail-icon">📍</span>
+              <span className="detail-text">{deal.destination}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-icon">📅</span>
+              <span className="detail-text">{t('departure')}: {new Date(deal.departureDate).toLocaleDateString()}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-icon">🌙</span>
+              <span className="detail-text">{deal.duration} {t('nights')}</span>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Preço */}
+      <div className="deal-pricing">
+        <div className="price-old">
+          {deal.currency === 'BRL' ? 'R$' : deal.currency} {deal.originalPrice.toLocaleString()}
+        </div>
+        <div className="price-current">
+          {deal.currency === 'BRL' ? 'R$' : deal.currency} {deal.currentPrice.toLocaleString()}
         </div>
       </div>
-      
-      <div className="deal-content">
-        <h3 className="deal-title">{deal.title}</h3>
-        
-        <div className="deal-details">
-          {deal.type === 'flight' && (
-            <>
-              <p className="detail-item">
-                <span className="detail-label">🛫 Companhia:</span>
-                <span className="detail-value">{deal.airline}</span>
-              </p>
-              <p className="detail-item">
-                <span className="detail-label">📍 Origem:</span>
-                <span className="detail-value">{deal.origin}</span>
-              </p>
-              <p className="detail-item">
-                <span className="detail-label">📍 Destino:</span>
-                <span className="detail-value">{deal.destination}</span>
-              </p>
-              <p className="detail-item">
-                <span className="detail-label">📅 Partida:</span>
-                <span className="detail-value">{formatDate(deal.departureDate)}</span>
-              </p>
-            </>
-          )}
-          
-          {deal.type === 'cruise' && (
-            <>
-              <p className="detail-item">
-                <span className="detail-label">🚢 Companhia:</span>
-                <span className="detail-value">{deal.cruiseLine}</span>
-              </p>
-              <p className="detail-item">
-                <span className="detail-label">⛴️ Navio:</span>
-                <span className="detail-value">{deal.ship}</span>
-              </p>
-              <p className="detail-item">
-                <span className="detail-label">🌊 Portos:</span>
-                <span className="detail-value">{deal.ports?.join(', ')}</span>
-              </p>
-              <p className="detail-item">
-                <span className="detail-label">🌙 Noites:</span>
-                <span className="detail-value">{deal.nights}</span>
-              </p>
-            </>
-          )}
+
+      {/* Rodapé */}
+      <div className="card-footer">
+        <div className="verified-badge">
+          <span className="verified-icon">✔️</span>
+          <span className="verified-text">{t('verified')}</span>
         </div>
-        
-        <div className="deal-pricing">
-          <div className="original-price">
-            De: <span className="price-value strikethrough">{formatPrice(deal.originalPrice)}</span>
-          </div>
-          <div className="current-price">
-            Por: <span className="price-value highlight">{formatPrice(deal.currentPrice)}</span>
-          </div>
-          <div className="savings">
-            💰 Economia de {formatPrice(savings)}
-          </div>
-        </div>
-      </div>
-      
-      <div className="deal-footer">
         <a 
           href={deal.url} 
           target="_blank" 
-          rel="noopener noreferrer"
+          rel="noopener noreferrer" 
           className="deal-button"
         >
-          Ver Oferta 🔗
+          {t('viewDeal')} →
         </a>
-        <div className="deal-meta">
-          <span className="source">Fonte: {deal.source}</span>
-          <span className="verified">✓ Verificado</span>
-        </div>
       </div>
     </div>
   );
 }
-
-DealCard.propTypes = {
-  deal: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['flight', 'cruise']).isRequired,
-    title: PropTypes.string.isRequired,
-    originalPrice: PropTypes.number.isRequired,
-    currentPrice: PropTypes.number.isRequired,
-    discount: PropTypes.number.isRequired,
-    currency: PropTypes.string,
-    url: PropTypes.string.isRequired,
-    source: PropTypes.string.isRequired,
-    verified: PropTypes.bool,
-    // Flight specific
-    airline: PropTypes.string,
-    origin: PropTypes.string,
-    destination: PropTypes.string,
-    departureDate: PropTypes.string,
-    // Cruise specific
-    cruiseLine: PropTypes.string,
-    ship: PropTypes.string,
-    ports: PropTypes.arrayOf(PropTypes.string),
-    nights: PropTypes.number,
-  }).isRequired,
-};
 
 export default DealCard;
