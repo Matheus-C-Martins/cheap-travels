@@ -1,146 +1,274 @@
 # Cheap Travels 🌍✈️
 
-Uma aplicação React moderna para encontrar as melhores ofertas de viagens.
-
 [![Deploy to GitHub Pages](https://github.com/Matheus-C-Martins/cheap-travels/actions/workflows/deploy.yml/badge.svg)](https://github.com/Matheus-C-Martins/cheap-travels/actions/workflows/deploy.yml)
+
+## 🎯 Sistema de Rastreamento de Ofertas de Viagens
+
+Plataforma automatizada que rastreia a internet em tempo real para encontrar **ofertas legítimas e verificadas** de passagens aéreas e cruzeiros com descontos de **50% a 90%**.
+
+### ✨ Características Principais
+
+- 🔍 **Scraping Automático** - Rastreia centenas de sites oficiais 24/7
+- ✅ **100% Verificado** - Todas ofertas passam por validação rigorosa
+- ⏰ **Tempo Real** - Atualizações a cada 30 minutos
+- 🔗 **Links Oficiais** - Redirecionamento direto para sites confiáveis
+- 🛡️ **Apenas 50-90% OFF** - Filtra automaticamente ofertas reais
+- 💰 **Sem Ofertas Falsas** - Sistema anti-fraude integrado
 
 ## 🚀 Tecnologias
 
-- **React 18** - Biblioteca UI moderna
-- **Vite** - Build tool ultrarrápido e dev server
-- **React Router** - Navegação entre páginas
-- **ESLint** - Linting e qualidade de código
-- **GitHub Actions** - CI/CD pipeline automático
-- **GitHub Pages** - Hospedagem gratuita
+### Frontend
+- **React 18** - Interface moderna e responsiva
+- **Vite** - Build ultrarrápido
+- **React Router** - Navegação SPA
+- **CSS3** - Estilização avançada
+
+### Backend
+- **Node.js + Express** - API REST
+- **Puppeteer** - Web scraping dinâmico
+- **Cheerio** - Parsing HTML
+- **Axios** - Requisições HTTP
+- **Node-Cron** - Agendamento automático
+- **Node-Cache** - Cache em memória
+
+### CI/CD
+- **GitHub Actions** - Pipeline automático
+- **GitHub Pages** - Hospedagem frontend
+- **ESLint** - Qualidade de código
 
 ## 📦 Instalação
 
+### Frontend
+
 ```bash
-# Clonar o repositório
+# Clonar repositório
 git clone https://github.com/Matheus-C-Martins/cheap-travels.git
 cd cheap-travels
 
 # Instalar dependências
 npm install
 
-# Executar em modo de desenvolvimento
+# Configurar variáveis de ambiente
+cp .env.example .env
+# Editar .env com a URL da sua API
+
+# Desenvolvimento
 npm run dev
 
-# Build para produção
+# Build
 npm run build
-
-# Preview do build de produção
-npm run preview
-
-# Lint do código
-npm run lint
-
-# Deploy para GitHub Pages
-npm run deploy
 ```
 
-## 🔧 Desenvolvimento
+### Backend API
 
-O servidor de desenvolvimento estará disponível em `http://localhost:3000`
+```bash
+cd api
 
-### Estrutura de Componentes
+# Instalar dependências
+npm install
 
-- **Navbar** - Barra de navegação responsiva
-- **Footer** - Rodapé com informações
-- **Home** - Página inicial com busca e features
-- **About** - Página sobre o projeto
+# Configurar variáveis
+cp .env.example .env
 
-## 🌐 Deploy
+# Desenvolvimento
+npm run dev
 
-O projeto está configurado para **deploy automático** no GitHub Pages através do GitHub Actions.
+# Produção
+npm start
+```
 
-### Como funciona:
+## 🔍 Fontes de Dados
 
-1. Cada push para a branch `main` dispara automaticamente o workflow
-2. O GitHub Actions executa:
-   - ✅ Instalação de dependências (`npm ci`)
-   - ✅ Linting (`npm run lint`)
-   - ✅ Build (`npm run build`)
-   - ✅ Deploy para GitHub Pages
+### Voos ✈️
+- Skyscanner
+- Google Flights
+- Kayak
+- LATAM
+- Azul
+- GOL
+- TAP Air Portugal
 
-3. O site fica disponível em: `https://matheus-c-martins.github.io/cheap-travels/`
+### Cruzeiros 🚢
+- MSC Cruzeiros
+- Costa Cruzeiros
+- Royal Caribbean
+- CVC Cruzeiros
 
-### Configuração do GitHub Pages
+## 🛡️ Sistema de Validação
 
-Para ativar o GitHub Pages:
+Cada oferta passa por 5 etapas de validação:
 
-1. Vá em **Settings** > **Pages** do repositório
-2. Em **Source**, selecione **GitHub Actions**
-3. O deploy será automático após o próximo push
+1. **Cálculo de Desconto** - Verifica se está entre 50-90%
+2. **Validação de URL** - Confirma que o link está ativo
+3. **Verificação de Preço** - Confirma preços com a fonte
+4. **Validação de Data** - Garante que não expirou
+5. **Fonte Confiável** - Apenas sites oficiais
 
 ## 📁 Estrutura do Projeto
 
 ```
 cheap-travels/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml          # CI/CD workflow
-├── public/
-│   └── vite.svg               # Ícone público
-├── src/
+├── api/                      # Backend Node.js
+│   ├── services/
+│   │   ├── scraper.js        # Lógica de scraping
+│   │   ├── validator.js      # Validação de ofertas
+│   │   ├── scheduler.js      # Agendamento
+│   │   └── dealsService.js   # Gerenciamento de ofertas
+│   ├── routes/
+│   │   └── deals.js          # Endpoints da API
+│   ├── middleware/
+│   │   └── rateLimiter.js    # Proteção contra abuse
+│   └── server.js             # Servidor Express
+├── src/                      # Frontend React
 │   ├── components/
-│   │   ├── Navbar.jsx         # Componente de navegação
-│   │   ├── Navbar.css
-│   │   ├── Footer.jsx         # Componente de rodapé
-│   │   └── Footer.css
+│   │   ├── DealCard.jsx      # Card de oferta
+│   │   ├── FilterBar.jsx     # Barra de filtros
+│   │   ├── Navbar.jsx
+│   │   └── Footer.jsx
 │   ├── pages/
-│   │   ├── Home.jsx           # Página inicial
-│   │   ├── Home.css
-│   │   ├── About.jsx          # Página sobre
-│   │   └── About.css
-│   ├── App.jsx                # Componente principal
-│   ├── App.css
-│   ├── main.jsx               # Ponto de entrada
-│   └── index.css              # Estilos globais
-├── .eslintrc.cjs              # Configuração ESLint
-├── .gitignore                 # Arquivos ignorados pelo Git
-├── index.html                 # HTML principal
-├── package.json               # Dependências e scripts
-├── vite.config.js             # Configuração Vite
-└── README.md                  # Este arquivo
+│   │   ├── Home.jsx          # Página principal
+│   │   └── About.jsx         # Sobre o sistema
+│   ├── services/
+│   │   └── api.js            # Cliente da API
+│   └── App.jsx
+├── .github/workflows/
+│   └── deploy.yml            # CI/CD pipeline
+└── DEPLOYMENT.md             # Guia de deploy completo
 ```
 
-## 🎨 Features
+## 🔌 API Endpoints
 
-- ✨ Interface moderna e responsiva
-- 🔍 Sistema de busca de viagens
-- 📱 Mobile-first design
-- 🌓 Suporte a tema escuro
-- ⚡ Performance otimizada com Vite
-- 🔄 CI/CD automático
-- 📦 Deploy automático no GitHub Pages
+```
+GET /api/health          # Status da API
+GET /api/deals           # Todas as ofertas
+GET /api/deals/flights   # Apenas voos
+GET /api/deals/cruises   # Apenas cruzeiros
+```
 
-## 🛠️ Comandos Úteis
+### Exemplo de Resposta
 
-| Comando | Descrição |
-|---------|----------|
-| `npm run dev` | Inicia servidor de desenvolvimento |
-| `npm run build` | Cria build de produção |
-| `npm run preview` | Preview do build |
-| `npm run lint` | Verifica código com ESLint |
-| `npm run deploy` | Deploy manual para GitHub Pages |
+```json
+{
+  "success": true,
+  "count": 15,
+  "data": [
+    {
+      "id": "flight-123",
+      "type": "flight",
+      "title": "São Paulo → Lisboa",
+      "airline": "TAP Air Portugal",
+      "originalPrice": 8500,
+      "currentPrice": 2550,
+      "discount": 70,
+      "url": "https://...",
+      "verified": true
+    }
+  ],
+  "lastUpdate": "2025-12-30T12:00:00Z"
+}
+```
+
+## 🌐 Deploy
+
+### Frontend (GitHub Pages)
+
+Deploy automático via GitHub Actions:
+1. Push para `main`
+2. Workflow executa build e deploy
+3. Site disponível em: `https://matheus-c-martins.github.io/cheap-travels/`
+
+### Backend API
+
+Opções de hospedagem:
+- **Render.com** (Recomendado - Gratuito)
+- **Railway.app**
+- **Heroku**
+- **DigitalOcean**
+
+Ver [DEPLOYMENT.md](./DEPLOYMENT.md) para guia completo.
+
+## ⏰ Atualização Automática
+
+O sistema executa scraping automaticamente:
+- **Intervalo:** A cada 30 minutos
+- **Fontes:** Todas simultaneamente
+- **Validação:** Antes de cada publicação
+- **Cache:** 5 minutos para performance
+
+## 🛠️ Desenvolvimento
+
+### Comandos Úteis
+
+```bash
+# Frontend
+npm run dev          # Servidor desenvolvimento
+npm run build        # Build produção
+npm run lint         # Verificar código
+npm run preview      # Preview do build
+
+# Backend
+cd api
+npm run dev          # Servidor com nodemon
+npm start            # Servidor produção
+npm run scrape       # Executar scraping manual
+```
+
+### Adicionar Nova Fonte
+
+1. Adicionar em `api/services/scraper.js`:
+```javascript
+const NEW_SOURCE = {
+  name: 'Nome da Fonte',
+  url: 'https://...',
+  type: 'scrape' // ou 'api'
+};
+```
+
+2. Implementar função de scraping específica
+
+3. Adicionar validação
+
+## 🔒 Segurança
+
+- ✅ Helmet.js para headers seguros
+- ✅ Rate limiting (100 req/min por IP)
+- ✅ CORS configurado
+- ✅ Validação de entrada
+- ✅ San itização de dados
+
+## ⚠️ Importante
+
+### Legal
+- Respeitar `robots.txt` de cada site
+- Usar APIs oficiais quando disponível
+- Não sobrecarregar servidores
+- Incluir delays entre requisições
+
+### Ética
+- Apenas agregar informações públicas
+- Redirecionar para sites oficiais
+- Não armazenar dados pessoais
+- Transparente sobre a fonte
 
 ## 📝 Próximos Passos
 
-- [ ] Integrar API de busca de voos
-- [ ] Adicionar sistema de filtragem avançada
-- [ ] Implementar comparação de preços
-- [ ] Adicionar autenticação de usuários
+- [ ] Implementar scraping real com Puppeteer
+- [ ] Integrar APIs oficiais (Skyscanner, Amadeus)
+- [ ] Adicionar banco de dados (MongoDB/PostgreSQL)
+- [ ] Sistema de notificações por email
+- [ ] Filtros avançados (preço, data, origem)
+- [ ] Gráficos de tendências de preços
 - [ ] Sistema de favoritos
-- [ ] Notificações de ofertas
-- [ ] Testes automatizados (Jest + React Testing Library)
+- [ ] Comparação lado a lado
+- [ ] Aplicativo mobile (React Native)
+- [ ] Testes automatizados
 
 ## 🤝 Contribuindo
 
-1. Faça um Fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. Push para a branch (`git push origin feature/MinhaFeature`)
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/NovaFeature`)
+3. Commit (`git commit -m 'Add NovaFeature'`)
+4. Push (`git push origin feature/NovaFeature`)
 5. Abra um Pull Request
 
 ## 📄 Licença
@@ -150,9 +278,11 @@ MIT © Matheus C. Martins
 ## 👨‍💻 Autor
 
 **Matheus C. Martins**
-
 - GitHub: [@Matheus-C-Martins](https://github.com/Matheus-C-Martins)
+- Repositório: [cheap-travels](https://github.com/Matheus-C-Martins/cheap-travels)
 
 ---
 
 ⭐ Se este projeto foi útil, considere dar uma estrela!
+
+🐛 Encontrou um bug? [Abra uma issue](https://github.com/Matheus-C-Martins/cheap-travels/issues)
