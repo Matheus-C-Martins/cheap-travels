@@ -1,0 +1,3 @@
+# Cheap Travels 🌍✈️
+
+Inicializando projeto...
