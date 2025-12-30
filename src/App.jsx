@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import FilterBar from './components/FilterBar';
 import DealsGrid from './components/DealsGrid';
 import './App.css';
@@ -14,13 +14,42 @@ function App() {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+  // Memoize fetchDeals para resolver warning do ESLint
+  const fetchDeals = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${API_URL}/deals`);
+      
+      if (!response.ok) {
+        throw new Error(`Erro ao carregar ofertas: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success && Array.isArray(data.data)) {
+        setDeals(data.data);
+      } else {
+        throw new Error('Formato de dados inválido');
+      }
+    } catch (err) {
+      console.error('Erro ao buscar ofertas:', err);
+      setError(err.message);
+      // Dados mockados para desenvolvimento
+      setDeals([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [API_URL]);
+
   // Fetch deals
   useEffect(() => {
     fetchDeals();
     // Atualizar a cada 5 minutos
     const interval = setInterval(fetchDeals, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchDeals]);
 
   // Filter and sort deals
   useEffect(() => {
@@ -54,34 +83,6 @@ function App() {
     const cruises = deals.filter(d => d.type === 'cruise').length;
     setStats({ flights, cruises });
   }, [deals]);
-
-  async function fetchDeals() {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_URL}/deals`);
-      
-      if (!response.ok) {
-        throw new Error(`Erro ao carregar ofertas: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.success && Array.isArray(data.data)) {
-        setDeals(data.data);
-      } else {
-        throw new Error('Formato de dados inválido');
-      }
-    } catch (err) {
-      console.error('Erro ao buscar ofertas:', err);
-      setError(err.message);
-      // Dados mockados para desenvolvimento
-      setDeals([]);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   function handleRetry() {
     fetchDeals();
