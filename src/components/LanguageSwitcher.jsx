@@ -5,6 +5,9 @@ import './LanguageSwitcher.css';
 function LanguageSwitcher({ currentLanguage, onLanguageChange }) {
   return (
     <div className="language-switcher">
+      <div className="current-language">
+        {languageNames[currentLanguage].flag}
+      </div>
       <select 
         value={currentLanguage} 
         onChange={(e) => onLanguageChange(e.target.value)}
