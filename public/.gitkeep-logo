@@ -1,0 +1,23 @@
+# Logo File Placeholder
+
+This file is a placeholder to maintain the public/ folder structure.
+
+## To Add the Logo:
+
+1. Download logo2.jpg from the PR conversation
+2. Rename it to: logo.png
+3. Place it in: public/logo.png
+4. Commit and push:
+   ```bash
+   git add public/logo.png
+   git commit -m "feat: Add logo image"
+   git push
+   ```
+
+## Expected File:
+- **Path:** public/logo.png
+- **Type:** PNG image
+- **Design:** Blue airplane with cyan discount tag and % symbol
+- **Size:** 512x512px recommended
+
+Once logo.png is added, delete this placeholder file.
