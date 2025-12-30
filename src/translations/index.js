@@ -39,6 +39,11 @@ const translations = {
     addToFavorites: 'Add to favorites',
     removeFromFavorites: 'Remove from favorites',
     darkMode: 'Dark mode',
+    lightMode: 'Light mode',
+    share: 'Share',
+    shareVia: 'Share via',
+    copyLink: 'Copy Link',
+    copiedToClipboard: 'Copied to clipboard!',
     lightMode: 'Light mode'
   },
   pt: {
@@ -81,6 +86,11 @@ const translations = {
     addToFavorites: 'Adicionar aos favoritos',
     removeFromFavorites: 'Remover dos favoritos',
     darkMode: 'Modo escuro',
+    lightMode: 'Modo claro',
+    share: 'Compartilhar',
+    shareVia: 'Compartilhar via',
+    copyLink: 'Copiar Link',
+    copiedToClipboard: 'Copiado!',
     lightMode: 'Modo claro'
   },
   es: {
@@ -123,6 +133,11 @@ const translations = {
     addToFavorites: 'Añadir a favoritos',
     removeFromFavorites: 'Quitar de favoritos',
     darkMode: 'Modo oscuro',
+    lightMode: 'Modo claro',
+    share: 'Compartir',
+    shareVia: 'Compartir vía',
+    copyLink: 'Copiar Enlace',
+    copiedToClipboard: '¡Copiado!',
     lightMode: 'Modo claro'
   },
   fr: {
@@ -165,6 +180,11 @@ const translations = {
     addToFavorites: 'Ajouter aux favoris',
     removeFromFavorites: 'Retirer des favoris',
     darkMode: 'Mode sombre',
+    lightMode: 'Mode clair',
+    share: 'Partager',
+    shareVia: 'Partager via',
+    copyLink: 'Copier le Lien',
+    copiedToClipboard: 'Copié!',
     lightMode: 'Mode clair'
   },
   de: {
@@ -207,6 +227,11 @@ const translations = {
     addToFavorites: 'Zu Favoriten hinzufügen',
     removeFromFavorites: 'Aus Favoriten entfernen',
     darkMode: 'Dunkler Modus',
+    lightMode: 'Heller Modus',
+    share: 'Teilen',
+    shareVia: 'Teilen über',
+    copyLink: 'Link kopieren',
+    copiedToClipboard: 'Kopiert!',
     lightMode: 'Heller Modus'
   }
 };
