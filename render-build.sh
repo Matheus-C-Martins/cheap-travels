@@ -4,7 +4,7 @@
 set -e
 
 echo "Installing dependencies..."
-npm ci --prefer-offline --no-audit
+npm ci --no-audit
 
 echo "Running build with increased memory..."
 export NODE_OPTIONS="--max-old-space-size=2048"
