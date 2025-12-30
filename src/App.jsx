@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import FilterBar from './components/FilterBar';
 import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import SearchBar from './components/SearchBar';
 import { useTranslation } from './hooks/useTranslation';
 import './App.css';
 
@@ -13,6 +14,7 @@ function App() {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('discount');
+  const [searchTerm, setSearchTerm] = useState('');
   const [stats, setStats] = useState({ flights: 0, cruises: 0 });
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
@@ -72,10 +74,26 @@ function App() {
   useEffect(() => {
     let result = [...deals];
 
+    // Search filter
+    if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+      result = result.filter(deal => {
+        const title = deal.title?.toLowerCase() || '';
+        const destination = deal.destination?.toLowerCase() || '';
+        const origin = deal.origin?.toLowerCase() || '';
+        
+        return title.includes(search) || 
+               destination.includes(search) || 
+               origin.includes(search);
+      });
+    }
+
+    // Type filter
     if (filter !== 'all') {
       result = result.filter(deal => deal.type === filter);
     }
 
+    // Sort
     result.sort((a, b) => {
       switch (sortBy) {
         case 'discount':
@@ -90,7 +108,7 @@ function App() {
     });
 
     setFilteredDeals(result);
-  }, [deals, filter, sortBy]);
+  }, [deals, filter, sortBy, searchTerm]);
 
   useEffect(() => {
     const flights = deals.filter(d => d.type === 'flight').length;
@@ -154,13 +172,22 @@ function App() {
         ) : (
           <>
             {!loading && (
-              <FilterBar
-                filter={filter}
-                setFilter={setFilter}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                t={t}
-              />
+              <>
+                <SearchBar 
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  t={t}
+                  resultsCount={filteredDeals.length}
+                />
+                
+                <FilterBar
+                  filter={filter}
+                  setFilter={setFilter}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  t={t}
+                />
+              </>
             )}
             
             {loading && loadingTimeout && (

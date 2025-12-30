@@ -7,6 +7,10 @@ export const translations = {
     cruises: 'Cruises',
     total: 'Total',
     
+    // Search
+    searchPlaceholder: 'Search destinations, cities, countries...',
+    resultsFound: 'results found',
+    
     // Filters
     filterByType: 'Filter by Type',
     sortBy: 'Sort By',
@@ -60,6 +64,10 @@ export const translations = {
     flights: 'Voos',
     cruises: 'Cruzeiros',
     total: 'Total',
+    
+    // Search
+    searchPlaceholder: 'Buscar destinos, cidades, pa\u00edses...',
+    resultsFound: 'resultados encontrados',
     
     // Filters
     filterByType: 'Filtrar por Tipo',
@@ -115,6 +123,10 @@ export const translations = {
     cruises: 'Croisi\u00e8res',
     total: 'Total',
     
+    // Search
+    searchPlaceholder: 'Rechercher des destinations, villes, pays...',
+    resultsFound: 'r\u00e9sultats trouv\u00e9s',
+    
     // Filters
     filterByType: 'Filtrer par Type',
     sortBy: 'Trier par',
@@ -169,6 +181,10 @@ export const translations = {
     cruises: 'Cruceros',
     total: 'Total',
     
+    // Search
+    searchPlaceholder: 'Buscar destinos, ciudades, pa\u00edses...',
+    resultsFound: 'resultados encontrados',
+    
     // Filters
     filterByType: 'Filtrar por Tipo',
     sortBy: 'Ordenar por',
@@ -222,6 +238,10 @@ export const translations = {
     flights: 'Fl\u00fcge',
     cruises: 'Kreuzfahrten',
     total: 'Gesamt',
+    
+    // Search
+    searchPlaceholder: 'Reiseziele, St\u00e4dte, L\u00e4nder suchen...',
+    resultsFound: 'Ergebnisse gefunden',
     
     // Filters
     filterByType: 'Nach Typ filtern',
