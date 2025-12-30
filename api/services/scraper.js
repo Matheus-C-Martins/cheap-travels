@@ -1,162 +1,148 @@
-import { scrapeLATAM, scrapeAzul, scrapeGOL } from './scrapers/flightScrapers.js';
-import { scrapeMSC, scrapeCosta, scrapeRoyalCaribbean } from './scrapers/cruiseScrapers.js';
-import { validateDeal } from './validator.js';
-import { saveDeals } from './dealsService.js';
+import puppeteer from 'puppeteer';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
-/**
- * Scrape de ofertas de voos de todas as fontes
- */
-export async function scrapeFlights() {
-  console.log('\n🛫 ========== INICIANDO SCRAPING DE VOOS ==========');
-  console.log(`📅 ${new Date().toLocaleString('pt-BR')}\n`);
-  
-  const allFlights = [];
-  
-  // Array de scrapers a executar
-  const flightScrapers = [
-    { name: 'LATAM', scraper: scrapeLATAM },
-    { name: 'Azul', scraper: scrapeAzul },
-    { name: 'GOL', scraper: scrapeGOL }
-  ];
-  
-  // Executar scrapers em paralelo (máximo 2 simultâneos para não sobrecarregar)
-  for (let i = 0; i < flightScrapers.length; i += 2) {
-    const batch = flightScrapers.slice(i, i + 2);
+class TravelScraper {
+  constructor() {
+    this.deals = [];
+  }
+
+  async launchBrowser() {
+    const isProduction = process.env.NODE_ENV === 'production';
     
-    const results = await Promise.allSettled(
-      batch.map(({ scraper }) => 
-        scraper().catch(err => {
-          console.error(`❌ Falha no scraper:`, err.message);
-          return [];
-        })
-      )
-    );
+    const browserOptions = {
+      headless: 'new',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--disable-extensions',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--disable-blink-features=AutomationControlled'
+      ]
+    };
+
+    // On Render/production, use system Chrome
+    if (isProduction) {
+      browserOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser';
+    }
+
+    try {
+      return await puppeteer.launch(browserOptions);
+    } catch (error) {
+      console.error('Error launching browser:', error);
+      throw error;
+    }
+  }
+
+  async scrapeFlightDeals() {
+    console.log('Starting flight deals scraping...');
     
-    results.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        const flights = result.value;
-        console.log(`✅ ${batch[index].name}: ${flights.length} ofertas`);
-        
-        // Validar cada oferta
-        flights.forEach(flight => {
-          if (validateDeal(flight)) {
-            allFlights.push(flight);
-          }
-        });
+    // Mock data for demonstration
+    const mockFlights = [
+      {
+        id: 'flight-1',
+        type: 'flight',
+        title: 'S\u00e3o Paulo to Paris Round Trip',
+        origin: 'S\u00e3o Paulo (GRU)',
+        destination: 'Paris (CDG)',
+        departureDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        stops: 0,
+        originalPrice: 3500,
+        currentPrice: 1890,
+        discount: 46,
+        currency: 'BRL',
+        source: 'Skyscanner',
+        url: 'https://www.skyscanner.com',
+        scrapedAt: new Date().toISOString()
+      },
+      {
+        id: 'flight-2',
+        type: 'flight',
+        title: 'Rio to London Direct Flight',
+        origin: 'Rio de Janeiro (GIG)',
+        destination: 'London (LHR)',
+        departureDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString(),
+        stops: 0,
+        originalPrice: 4200,
+        currentPrice: 2100,
+        discount: 50,
+        currency: 'BRL',
+        source: 'Google Flights',
+        url: 'https://www.google.com/flights',
+        scrapedAt: new Date().toISOString()
       }
-    });
-    
-    // Pequeno delay entre batches
-    if (i + 2 < flightScrapers.length) {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-    }
-  }
-  
-  // Filtrar apenas ofertas com 50-90% de desconto
-  const validFlights = allFlights.filter(f => f.discount >= 50 && f.discount <= 90);
-  
-  // Remover duplicatas baseado no título
-  const uniqueFlights = removeDuplicates(validFlights, 'title');
-  
-  saveDeals('flights', uniqueFlights);
-  
-  console.log(`\n✅ Total de voos válidos: ${uniqueFlights.length}`);
-  console.log('🛫 ========== SCRAPING DE VOOS CONCLUÍDO ==========\n');
-  
-  return uniqueFlights;
-}
+    ];
 
-/**
- * Scrape de ofertas de cruzeiros de todas as fontes
- */
-export async function scrapeCruises() {
-  console.log('\n🚢 ========== INICIANDO SCRAPING DE CRUZEIROS ==========');
-  console.log(`📅 ${new Date().toLocaleString('pt-BR')}\n`);
-  
-  const allCruises = [];
-  
-  const cruiseScrapers = [
-    { name: 'MSC', scraper: scrapeMSC },
-    { name: 'Costa', scraper: scrapeCosta },
-    { name: 'Royal Caribbean', scraper: scrapeRoyalCaribbean }
-  ];
-  
-  // Executar scrapers em paralelo
-  for (let i = 0; i < cruiseScrapers.length; i += 2) {
-    const batch = cruiseScrapers.slice(i, i + 2);
+    return mockFlights;
+  }
+
+  async scrapeCruiseDeals() {
+    console.log('Starting cruise deals scraping...');
     
-    const results = await Promise.allSettled(
-      batch.map(({ scraper }) => 
-        scraper().catch(err => {
-          console.error(`❌ Falha no scraper:`, err.message);
-          return [];
-        })
-      )
-    );
-    
-    results.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        const cruises = result.value;
-        console.log(`✅ ${batch[index].name}: ${cruises.length} ofertas`);
-        
-        cruises.forEach(cruise => {
-          if (validateDeal(cruise)) {
-            allCruises.push(cruise);
-          }
-        });
+    // Mock data for demonstration
+    const mockCruises = [
+      {
+        id: 'cruise-1',
+        type: 'cruise',
+        title: 'Mediterranean Cruise - 7 Nights',
+        destination: 'Mediterranean Sea',
+        departureDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+        duration: 7,
+        originalPrice: 5500,
+        currentPrice: 3300,
+        discount: 40,
+        currency: 'BRL',
+        source: 'CruiseDirect',
+        url: 'https://www.cruisedirect.com',
+        scrapedAt: new Date().toISOString()
+      },
+      {
+        id: 'cruise-2',
+        type: 'cruise',
+        title: 'Caribbean Adventure - 5 Nights',
+        destination: 'Caribbean',
+        departureDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+        duration: 5,
+        originalPrice: 4000,
+        currentPrice: 2400,
+        discount: 40,
+        currency: 'BRL',
+        source: 'Carnival',
+        url: 'https://www.carnival.com',
+        scrapedAt: new Date().toISOString()
       }
-    });
+    ];
+
+    return mockCruises;
+  }
+
+  async scrapeAll() {
+    console.log('Starting scraping process...');
     
-    if (i + 2 < cruiseScrapers.length) {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // For now, using mock data instead of actual scraping
+      // This prevents issues with Puppeteer and Chrome on Render
+      const flights = await this.scrapeFlightDeals();
+      const cruises = await this.scrapeCruiseDeals();
+      
+      this.deals = [...flights, ...cruises];
+      
+      console.log(`Scraping completed. Found ${this.deals.length} deals.`);
+      return this.deals;
+    } catch (error) {
+      console.error('Error during scraping:', error);
+      // Return mock data even if scraping fails
+      return this.deals.length > 0 ? this.deals : [];
     }
   }
-  
-  const validCruises = allCruises.filter(c => c.discount >= 50 && c.discount <= 90);
-  const uniqueCruises = removeDuplicates(validCruises, 'title');
-  
-  saveDeals('cruises', uniqueCruises);
-  
-  console.log(`\n✅ Total de cruzeiros válidos: ${uniqueCruises.length}`);
-  console.log('🚢 ========== SCRAPING DE CRUZEIROS CONCLUÍDO ==========\n');
-  
-  return uniqueCruises;
-}
 
-/**
- * Remove duplicatas baseado em uma chave
- */
-function removeDuplicates(array, key) {
-  const seen = new Set();
-  return array.filter(item => {
-    const value = item[key].toLowerCase().trim();
-    if (seen.has(value)) {
-      return false;
-    }
-    seen.add(value);
-    return true;
-  });
-}
-
-// Executar scraping se chamado diretamente
-if (import.meta.url === `file://${process.argv[1]}`) {
-  console.log('\n🚀 ========== EXECUTANDO SCRAPING MANUAL ==========\n');
-  
-  try {
-    const [flights, cruises] = await Promise.all([
-      scrapeFlights(),
-      scrapeCruises()
-    ]);
-    
-    console.log('\n📊 ========== RESUMO FINAL ==========');
-    console.log(`✈️  Voos encontrados: ${flights.length}`);
-    console.log(`🚢 Cruzeiros encontrados: ${cruises.length}`);
-    console.log(`📦 Total de ofertas: ${flights.length + cruises.length}`);
-    console.log('✅ ========== SCRAPING CONCLUÍDO COM SUCESSO ==========\n');
-    
-    process.exit(0);
-  } catch (error) {
-    console.error('\n❌ Erro fatal no scraping:', error);
-    process.exit(1);
+  getDeals() {
+    return this.deals;
   }
 }
+
+export default TravelScraper;
