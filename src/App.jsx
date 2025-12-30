@@ -11,6 +11,7 @@ function App() {
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('discount');
   const [stats, setStats] = useState({ flights: 0, cruises: 0 });
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -19,8 +20,18 @@ function App() {
     try {
       setLoading(true);
       setError(null);
+      setLoadingTimeout(false);
 
-      const response = await fetch(`${API_URL}/deals`);
+      // Timeout de 10 segundos para mostrar mensagem
+      const timeoutId = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 10000);
+
+      const response = await fetch(`${API_URL}/deals`, {
+        signal: AbortSignal.timeout(15000) // 15s timeout total
+      });
+      
+      clearTimeout(timeoutId);
       
       if (!response.ok) {
         throw new Error(`Erro ao carregar ofertas: ${response.status}`);
@@ -35,11 +46,20 @@ function App() {
       }
     } catch (err) {
       console.error('Erro ao buscar ofertas:', err);
-      setError(err.message);
+      
+      if (err.name === 'TimeoutError') {
+        setError('A conexão com o servidor está demorando muito. O servidor pode estar iniciando (isso pode levar até 2 minutos na primeira vez).');
+      } else if (err.message.includes('Failed to fetch')) {
+        setError('Não foi possível conectar ao servidor. Verifique se a API está online ou tente novamente em alguns minutos.');
+      } else {
+        setError(err.message);
+      }
+      
       // Dados mockados para desenvolvimento
       setDeals([]);
     } finally {
       setLoading(false);
+      setLoadingTimeout(false);
     }
   }, [API_URL]);
 
@@ -123,20 +143,42 @@ function App() {
         {error ? (
           <div className="error-container">
             <div className="error-icon">⚠️</div>
-            <h2 className="error-title">Erro ao Carregar Ofertas</h2>
+            <h2 className="error-title">Não foi possível carregar as ofertas</h2>
             <p className="error-message">{error}</p>
             <button onClick={handleRetry} className="retry-button">
-              Tentar Novamente
+              ⟳ Tentar Novamente
             </button>
+            <p className="error-hint">
+              💡 <strong>Dica:</strong> Se é a primeira vez acessando, o servidor pode estar iniciando.
+              Aguarde 1-2 minutos e tente novamente.
+            </p>
           </div>
         ) : (
           <>
-            <FilterBar
-              filter={filter}
-              setFilter={setFilter}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-            />
+            {!loading && (
+              <FilterBar
+                filter={filter}
+                setFilter={setFilter}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+              />
+            )}
+            
+            {loading && loadingTimeout && (
+              <div className="loading-timeout-message">
+                <div className="timeout-icon">⏳</div>
+                <h3 className="timeout-title">Aguarde um momento...</h3>
+                <p className="timeout-text">
+                  O servidor está demorando mais que o esperado.
+                  Isso é normal na primeira conexão (pode levar até 2 minutos).
+                </p>
+                <div className="timeout-dots">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                </div>
+              </div>
+            )}
             
             <DealsGrid deals={filteredDeals} loading={loading} />
           </>

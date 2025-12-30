@@ -158,7 +158,6 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  /* Scroll suave quando navegar para elementos */
 }
 
 /* Todos os elementos dentro do main devem considerar o header sticky */
@@ -195,6 +194,75 @@ body {
   font-weight: 500;
 }
 
+/* Loading Timeout Message */
+.loading-timeout-message {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.timeout-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.timeout-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.timeout-text {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.timeout-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.timeout-dots .dot {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.timeout-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.timeout-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { 
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* Error State */
 .error-container {
   max-width: 600px;
@@ -204,6 +272,18 @@ body {
   border-radius: 12px;
   border: 1px solid var(--border);
   text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .error-icon {
@@ -221,6 +301,21 @@ body {
 .error-message {
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.error-hint {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.error-hint strong {
+  color: var(--accent);
 }
 
 .retry-button {
@@ -233,6 +328,9 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .retry-button:hover {
@@ -347,6 +445,12 @@ body {
     flex-direction: column;
     text-align: center;
   }
+  
+  .loading-timeout-message,
+  .error-container {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -368,8 +472,19 @@ body {
     padding: 1rem 0.75rem;
   }
   
+  .loading-timeout-message,
   .error-container {
-    margin: 1rem auto;
-    padding: 1.5rem;
+    margin: 1rem 0.5rem;
+    padding: 1.25rem;
+  }
+  
+  .timeout-title,
+  .error-title {
+    font-size: 1.25rem;
+  }
+  
+  .timeout-text,
+  .error-message {
+    font-size: 0.9375rem;
   }
 }
