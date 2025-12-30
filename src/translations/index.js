@@ -43,7 +43,8 @@ const translations = {
     share: 'Share',
     shareVia: 'Share via',
     copyLink: 'Copy Link',
-    copiedToClipboard: 'Copied to clipboard!'
+    copiedToClipboard: 'Copied to clipboard!',
+    lightMode: 'Light mode'
   },
   pt: {
     appName: 'Viagens Baratas',
@@ -89,7 +90,8 @@ const translations = {
     share: 'Compartilhar',
     shareVia: 'Compartilhar via',
     copyLink: 'Copiar Link',
-    copiedToClipboard: 'Copiado!'
+    copiedToClipboard: 'Copiado!',
+    lightMode: 'Modo claro'
   },
   es: {
     appName: 'Viajes Baratos',
@@ -135,7 +137,8 @@ const translations = {
     share: 'Compartir',
     shareVia: 'Compartir vía',
     copyLink: 'Copiar Enlace',
-    copiedToClipboard: '¡Copiado!'
+    copiedToClipboard: '¡Copiado!',
+    lightMode: 'Modo claro'
   },
   fr: {
     appName: 'Voyages Pas Chers',
@@ -181,7 +184,8 @@ const translations = {
     share: 'Partager',
     shareVia: 'Partager via',
     copyLink: 'Copier le Lien',
-    copiedToClipboard: 'Copié!'
+    copiedToClipboard: 'Copié!',
+    lightMode: 'Mode clair'
   },
   de: {
     appName: 'Günstige Reisen',
@@ -227,7 +231,8 @@ const translations = {
     share: 'Teilen',
     shareVia: 'Teilen über',
     copyLink: 'Link kopieren',
-    copiedToClipboard: 'Kopiert!'
+    copiedToClipboard: 'Kopiert!',
+    lightMode: 'Heller Modus'
   }
 };
 
