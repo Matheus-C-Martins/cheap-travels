@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar';
 import ScrollToTop from './components/ScrollToTop';
 import SkipLink from './components/SkipLink';
 import DarkModeToggle from './components/DarkModeToggle';
+import LoadingState from './components/LoadingState';
 import { useTranslation } from './hooks/useTranslation';
 import { useFavorites } from './hooks/useFavorites';
 import { useDarkMode } from './hooks/useDarkMode';
@@ -25,14 +26,12 @@ function App() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [stats, setStats] = useState({ flights: 0, cruises: 0 });
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
   // Fetch deals only once on mount and set up interval
   useEffect(() => {
     let isMounted = true;
-    let timeoutId;
     
     const fetchDeals = async () => {
       if (!isMounted) return;
@@ -40,17 +39,10 @@ function App() {
       try {
         setLoading(true);
         setError(null);
-        setLoadingTimeout(false);
-
-        timeoutId = setTimeout(() => {
-          if (isMounted) setLoadingTimeout(true);
-        }, 10000);
 
         const response = await fetch(`${API_URL}/deals`, {
           signal: AbortSignal.timeout(15000)
         });
-        
-        clearTimeout(timeoutId);
         
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
@@ -80,7 +72,6 @@ function App() {
       } finally {
         if (isMounted) {
           setLoading(false);
-          setLoadingTimeout(false);
         }
       }
     };
@@ -95,7 +86,6 @@ function App() {
     return () => {
       isMounted = false;
       clearInterval(interval);
-      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [API_URL]); // Only depend on API_URL
 
@@ -212,51 +202,31 @@ function App() {
               <span aria-hidden="true">💡</span> {t('errorHint')}
             </p>
           </div>
+        ) : loading ? (
+          <LoadingState t={t} />
         ) : (
           <>
-            {!loading && (
-              <>
-                <SearchBar 
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                  t={t}
-                  resultsCount={filteredDeals.length}
-                />
-                
-                <FilterBar
-                  filter={filter}
-                  setFilter={setFilter}
-                  sortBy={sortBy}
-                  setSortBy={setSortBy}
-                  showFavorites={showFavorites}
-                  setShowFavorites={setShowFavorites}
-                  favoritesCount={favoritesCount}
-                  t={t}
-                />
-              </>
-            )}
+            <SearchBar 
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              t={t}
+              resultsCount={filteredDeals.length}
+            />
             
-            {loading && loadingTimeout && (
-              <div 
-                className="loading-timeout-message" 
-                role="status" 
-                aria-live="polite"
-                aria-busy="true"
-              >
-                <div className="timeout-icon" aria-hidden="true">⏳</div>
-                <h3 className="timeout-title">{t('loadingTimeout')}</h3>
-                <p className="timeout-text">{t('loadingTimeoutText')}</p>
-                <div className="timeout-dots" aria-hidden="true">
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                </div>
-              </div>
-            )}
+            <FilterBar
+              filter={filter}
+              setFilter={setFilter}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              showFavorites={showFavorites}
+              setShowFavorites={setShowFavorites}
+              favoritesCount={favoritesCount}
+              t={t}
+            />
             
             <DealsGrid 
               deals={filteredDeals} 
-              loading={loading} 
+              loading={false} 
               t={t}
               isFavorite={isFavorite}
               onToggleFavorite={toggleFavorite}
