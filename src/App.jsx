@@ -3,16 +3,19 @@ import FilterBar from './components/FilterBar';
 import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import { useTranslation } from './hooks/useTranslation';
+import { useFavorites } from './hooks/useFavorites';
 import './App.css';
 
 function App() {
   const { t, language, changeLanguage } = useTranslation();
+  const { favorites, toggleFavorite, isFavorite, favoritesCount } = useFavorites();
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('discount');
+  const [showFavorites, setShowFavorites] = useState(false);
   const [stats, setStats] = useState({ flights: 0, cruises: 0 });
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
@@ -72,10 +75,17 @@ function App() {
   useEffect(() => {
     let result = [...deals];
 
+    // Favorites filter
+    if (showFavorites) {
+      result = result.filter(deal => isFavorite(deal.id));
+    }
+
+    // Type filter
     if (filter !== 'all') {
       result = result.filter(deal => deal.type === filter);
     }
 
+    // Sort
     result.sort((a, b) => {
       switch (sortBy) {
         case 'discount':
@@ -90,7 +100,7 @@ function App() {
     });
 
     setFilteredDeals(result);
-  }, [deals, filter, sortBy]);
+  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite]);
 
   useEffect(() => {
     const flights = deals.filter(d => d.type === 'flight').length;
@@ -159,6 +169,9 @@ function App() {
                 setFilter={setFilter}
                 sortBy={sortBy}
                 setSortBy={setSortBy}
+                showFavorites={showFavorites}
+                setShowFavorites={setShowFavorites}
+                favoritesCount={favoritesCount}
                 t={t}
               />
             )}
@@ -176,7 +189,13 @@ function App() {
               </div>
             )}
             
-            <DealsGrid deals={filteredDeals} loading={loading} t={t} />
+            <DealsGrid 
+              deals={filteredDeals} 
+              loading={loading} 
+              t={t}
+              isFavorite={isFavorite}
+              onToggleFavorite={toggleFavorite}
+            />
           </>
         )}
       </main>
