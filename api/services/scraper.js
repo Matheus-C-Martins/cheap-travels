@@ -1,6 +1,4 @@
 import puppeteer from 'puppeteer';
-import axios from 'axios';
-import * as cheerio from 'cheerio';
 
 class TravelScraper {
   constructor() {
