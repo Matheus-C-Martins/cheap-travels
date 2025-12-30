@@ -11,6 +11,9 @@
   align-items: end;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s;
+  /* Garante que não fica escondido */
+  position: relative;
+  z-index: 10;
 }
 
 .filter-bar:hover {
@@ -66,6 +69,7 @@
   .filter-bar {
     padding: 1rem;
     gap: 1rem;
+    margin-bottom: 1.5rem;
   }
   
   .filter-group {
@@ -76,5 +80,16 @@
 @media (max-width: 480px) {
   .filter-bar {
     border-radius: 8px;
+    padding: 0.875rem;
+  }
+  
+  .filter-group label {
+    font-size: 0.8125rem;
+  }
+  
+  .filter-select {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+    padding-right: 2.5rem;
   }
 }
