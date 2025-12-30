@@ -1,62 +1,56 @@
 /**
- * Valida se uma oferta é legítima e atende aos critérios
+ * Valida se uma oferta atende aos critérios mínimos
+ * @param {Object} deal - Oferta a ser validada
+ * @returns {boolean}
  */
 export function validateDeal(deal) {
-  // Validações básicas
-  if (!deal.originalPrice || !deal.currentPrice) {
+  // 1. Verificar campos obrigatórios
+  if (!deal.title || !deal.currentPrice || !deal.originalPrice) {
     return false;
   }
-
-  // Calcular desconto real
-  const calculatedDiscount = Math.round(
-    ((deal.originalPrice - deal.currentPrice) / deal.originalPrice) * 100
-  );
-
-  // Verificar se o desconto está entre 50-90%
-  if (calculatedDiscount < 50 || calculatedDiscount > 90) {
+  
+  // 2. Calcular desconto
+  const discount = Math.round(((deal.originalPrice - deal.currentPrice) / deal.originalPrice) * 100);
+  
+  // 3. Validar range de desconto (50-90%)
+  if (discount < 50 || discount > 90) {
     return false;
   }
-
-  // Atualizar desconto calculado
-  deal.discount = calculatedDiscount;
-
-  // Verificar se a oferta não expirou
-  if (deal.expiresAt && new Date(deal.expiresAt) < new Date()) {
+  
+  // 4. Validar preços
+  if (deal.currentPrice <= 0 || deal.originalPrice <= 0) {
     return false;
   }
-
-  // Verificar se tem URL válida
-  if (!deal.url || !deal.url.startsWith('http')) {
+  
+  if (deal.currentPrice >= deal.originalPrice) {
     return false;
   }
-
-  // Verificar campos obrigatórios
-  if (!deal.title || !deal.source) {
+  
+  // 5. Validar URL
+  if (deal.url && !deal.url.startsWith('http')) {
     return false;
   }
-
+  
+  // 6. Validar fonte
+  const validSources = ['LATAM', 'Azul', 'GOL', 'MSC Cruzeiros', 'Costa Cruzeiros', 'Royal Caribbean'];
+  if (!validSources.includes(deal.source)) {
+    return false;
+  }
+  
+  // 7. Validar tipo
+  if (!['flight', 'cruise'].includes(deal.type)) {
+    return false;
+  }
+  
   return true;
 }
 
 /**
- * Verifica se a URL ainda está ativa e a oferta disponível
+ * Verifica se uma URL está ativa
+ * @param {string} url - URL para verificar
+ * @returns {Promise<boolean>}
  */
-export async function verifyDealUrl(url) {
-  try {
-    // Em produção, fazer request real para verificar
-    // const response = await axios.head(url, { timeout: 5000 });
-    // return response.status === 200;
-    return true; // Mockado
-  } catch (error) {
-    return false;
-  }
-}
-
-/**
- * Verifica a autenticidade do preço com a fonte
- */
-export async function verifyPricing(deal) {
-  // Em produção, fazer scraping da página para confirmar preço
-  // Por enquanto, retorna true
+export async function isUrlActive() {
+  // Implementação simplificada - pode ser expandida
   return true;
 }

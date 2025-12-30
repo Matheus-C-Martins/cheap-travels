@@ -1,18 +1,16 @@
-import { RateLimiterMemory } from 'rate-limiter-flexible';
+import rateLimit from 'express-rate-limit';
 
-const rateLimiter = new RateLimiterMemory({
-  points: 100, // 100 requests
-  duration: 60, // por 60 segundos
+/**
+ * Rate limiter para proteger a API de abuso
+ * Limita a 100 requests por minuto por IP
+ */
+export const rateLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minuto
+  max: 100, // Máximo de requests
+  message: {
+    success: false,
+    error: 'Muitas requisições. Tente novamente em 1 minuto.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
-
-export async function rateLimiter(req, res, next) {
-  try {
-    await rateLimiter.consume(req.ip);
-    next();
-  } catch (error) {
-    res.status(429).json({
-      success: false,
-      error: 'Muitas requisições. Tente novamente em alguns segundos.'
-    });
-  }
-}

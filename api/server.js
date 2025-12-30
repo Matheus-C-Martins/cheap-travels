@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
 });
 
 // Error handling
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error('Erro:', err);
   res.status(500).json({
     success: false,

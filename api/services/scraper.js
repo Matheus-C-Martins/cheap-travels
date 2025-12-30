@@ -24,9 +24,9 @@ export async function scrapeFlights() {
     const batch = flightScrapers.slice(i, i + 2);
     
     const results = await Promise.allSettled(
-      batch.map(({ name, scraper }) => 
+      batch.map(({ scraper }) => 
         scraper().catch(err => {
-          console.error(`❌ Falha no scraper ${name}:`, err.message);
+          console.error(`❌ Falha no scraper:`, err.message);
           return [];
         })
       )
@@ -86,9 +86,9 @@ export async function scrapeCruises() {
     const batch = cruiseScrapers.slice(i, i + 2);
     
     const results = await Promise.allSettled(
-      batch.map(({ name, scraper }) => 
+      batch.map(({ scraper }) => 
         scraper().catch(err => {
-          console.error(`❌ Falha no scraper ${name}:`, err.message);
+          console.error(`❌ Falha no scraper:`, err.message);
           return [];
         })
       )

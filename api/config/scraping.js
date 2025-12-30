@@ -78,8 +78,8 @@ export const PATTERNS = {
   // Preços (USD/EUR)
   PRICE_INTL: /[USD$€£]\s*([\d.,]+)/gi,
   
-  // Datas
-  DATE: /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/g,
+  // Datas - Corrigido: escape desnecessário removido
+  DATE: /(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/g,
   
   // Noites
   NIGHTS: /(\d+)\s*(?:noites?|nights?|días?)/gi,

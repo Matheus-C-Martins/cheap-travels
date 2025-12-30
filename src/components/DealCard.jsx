@@ -1,137 +1,141 @@
-import { useState } from 'react';
+import PropTypes from 'prop-types';
 import './DealCard.css';
 
 function DealCard({ deal }) {
-  const [imageError, setImageError] = useState(false);
-
+  
   const formatPrice = (price) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: deal.currency || 'BRL'
     }).format(price);
   };
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('pt-BR');
+  
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Data não informada';
+    return new Date(dateString).toLocaleDateString('pt-BR');
   };
-
-  const getDiscountColor = (discount) => {
-    if (discount >= 80) return '#10b981'; // Verde forte
-    if (discount >= 70) return '#22c55e'; // Verde
-    if (discount >= 60) return '#84cc16'; // Verde claro
-    return '#eab308'; // Amarelo
+  
+  const getDiscountClass = (discount) => {
+    if (discount >= 80) return 'discount-badge extreme';
+    if (discount >= 70) return 'discount-badge high';
+    if (discount >= 60) return 'discount-badge medium';
+    return 'discount-badge low';
   };
-
-  const isFlight = deal.type === 'flight';
-
+  
+  const savings = deal.originalPrice - deal.currentPrice;
+  
   return (
     <div className="deal-card">
-      {/* Badge de Desconto */}
-      <div 
-        className="discount-badge"
-        style={{ backgroundColor: getDiscountColor(deal.discount) }}
-      >
-        <span className="discount-value">-{deal.discount}%</span>
-        <span className="discount-label">DESCONTO</span>
+      <div className="deal-header">
+        <div className={getDiscountClass(deal.discount)}>
+          {deal.discount}% OFF
+        </div>
+        <div className="deal-type">
+          {deal.type === 'flight' ? '✈️ Voo' : '🚢 Cruzeiro'}
+        </div>
       </div>
-
-      {/* Conteúdo Principal */}
+      
       <div className="deal-content">
-        <div className="deal-header">
-          <h3 className="deal-title">{deal.title}</h3>
-          <span className="deal-source">🏢 {deal.source}</span>
+        <h3 className="deal-title">{deal.title}</h3>
+        
+        <div className="deal-details">
+          {deal.type === 'flight' && (
+            <>
+              <p className="detail-item">
+                <span className="detail-label">🛫 Companhia:</span>
+                <span className="detail-value">{deal.airline}</span>
+              </p>
+              <p className="detail-item">
+                <span className="detail-label">📍 Origem:</span>
+                <span className="detail-value">{deal.origin}</span>
+              </p>
+              <p className="detail-item">
+                <span className="detail-label">📍 Destino:</span>
+                <span className="detail-value">{deal.destination}</span>
+              </p>
+              <p className="detail-item">
+                <span className="detail-label">📅 Partida:</span>
+                <span className="detail-value">{formatDate(deal.departureDate)}</span>
+              </p>
+            </>
+          )}
+          
+          {deal.type === 'cruise' && (
+            <>
+              <p className="detail-item">
+                <span className="detail-label">🚢 Companhia:</span>
+                <span className="detail-value">{deal.cruiseLine}</span>
+              </p>
+              <p className="detail-item">
+                <span className="detail-label">⛴️ Navio:</span>
+                <span className="detail-value">{deal.ship}</span>
+              </p>
+              <p className="detail-item">
+                <span className="detail-label">🌊 Portos:</span>
+                <span className="detail-value">{deal.ports?.join(', ')}</span>
+              </p>
+              <p className="detail-item">
+                <span className="detail-label">🌙 Noites:</span>
+                <span className="detail-value">{deal.nights}</span>
+              </p>
+            </>
+          )}
         </div>
-
-        {/* Informações específicas */}
-        {isFlight ? (
-          <div className="deal-info flight-info">
-            <div className="info-row">
-              <span className="info-icon">✈️</span>
-              <span className="info-text">{deal.airline}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-icon">📅</span>
-              <span className="info-text">
-                Ida: {formatDate(deal.departureDate)}
-                {deal.returnDate && ` | Volta: ${formatDate(deal.returnDate)}`}
-              </span>
-            </div>
-            <div className="info-row">
-              <span className="info-icon">💺</span>
-              <span className="info-text">
-                {deal.stops === 0 ? 'Voo Direto' : `${deal.stops} parada(s)`}
-              </span>
-            </div>
+        
+        <div className="deal-pricing">
+          <div className="original-price">
+            De: <span className="price-value strikethrough">{formatPrice(deal.originalPrice)}</span>
           </div>
-        ) : (
-          <div className="deal-info cruise-info">
-            <div className="info-row">
-              <span className="info-icon">🚢</span>
-              <span className="info-text">{deal.cruiseLine} - {deal.ship}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-icon">🌴</span>
-              <span className="info-text">{deal.nights} noites</span>
-            </div>
-            <div className="info-row">
-              <span className="info-icon">📅</span>
-              <span className="info-text">Saída: {formatDate(deal.departureDate)}</span>
-            </div>
-            {deal.ports && deal.ports.length > 0 && (
-              <div className="info-row">
-                <span className="info-icon">⚓</span>
-                <span className="info-text">Portos: {deal.ports.join(', ')}</span>
-              </div>
-            )}
+          <div className="current-price">
+            Por: <span className="price-value highlight">{formatPrice(deal.currentPrice)}</span>
           </div>
-        )}
-
-        {/* Preços */}
-        <div className="deal-prices">
-          <div className="price-original">
-            <span className="price-label">De:</span>
-            <span className="price-value strikethrough">{formatPrice(deal.originalPrice)}</span>
-          </div>
-          <div className="price-current">
-            <span className="price-label">Por apenas:</span>
-            <span className="price-value highlight">{formatPrice(deal.currentPrice)}</span>
-          </div>
-          <div className="price-savings">
-            🎉 Economize {formatPrice(deal.originalPrice - deal.currentPrice)}!
+          <div className="savings">
+            💰 Economia de {formatPrice(savings)}
           </div>
         </div>
-
-        {/* Botão */}
+      </div>
+      
+      <div className="deal-footer">
         <a 
           href={deal.url} 
           target="_blank" 
           rel="noopener noreferrer"
           className="deal-button"
         >
-          Ver Oferta Oficial 🔗
+          Ver Oferta 🔗
         </a>
-
-        {/* Verificação */}
-        <div className="deal-footer">
-          <span className="verified-badge">
-            ✅ Oferta Verificada
-          </span>
-          <span className="last-checked">
-            Atualizada há {getTimeAgo(deal.lastChecked)}
-          </span>
+        <div className="deal-meta">
+          <span className="source">Fonte: {deal.source}</span>
+          <span className="verified">✓ Verificado</span>
         </div>
       </div>
     </div>
   );
 }
 
-function getTimeAgo(date) {
-  const minutes = Math.floor((new Date() - new Date(date)) / 60000);
-  if (minutes < 1) return 'agora mesmo';
-  if (minutes < 60) return `${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h`;
-  return `${Math.floor(hours / 24)}d`;
-}
+DealCard.propTypes = {
+  deal: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['flight', 'cruise']).isRequired,
+    title: PropTypes.string.isRequired,
+    originalPrice: PropTypes.number.isRequired,
+    currentPrice: PropTypes.number.isRequired,
+    discount: PropTypes.number.isRequired,
+    currency: PropTypes.string,
+    url: PropTypes.string.isRequired,
+    source: PropTypes.string.isRequired,
+    verified: PropTypes.bool,
+    // Flight specific
+    airline: PropTypes.string,
+    origin: PropTypes.string,
+    destination: PropTypes.string,
+    departureDate: PropTypes.string,
+    // Cruise specific
+    cruiseLine: PropTypes.string,
+    ship: PropTypes.string,
+    ports: PropTypes.arrayOf(PropTypes.string),
+    nights: PropTypes.number,
+  }).isRequired,
+};
 
 export default DealCard;
