@@ -5,14 +5,17 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import SearchBar from './components/SearchBar';
 import ScrollToTop from './components/ScrollToTop';
 import SkipLink from './components/SkipLink';
+import DarkModeToggle from './components/DarkModeToggle';
 import { useTranslation } from './hooks/useTranslation';
 import { useFavorites } from './hooks/useFavorites';
+import { useDarkMode } from './hooks/useDarkMode';
 import './App.css';
 import './styles/accessibility.css';
 
 function App() {
   const { t, language, changeLanguage } = useTranslation();
   const { favorites, toggleFavorite, isFavorite, favoritesCount } = useFavorites();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -160,6 +163,8 @@ function App() {
                 <span className="stat-label">{t('total')}</span>
               </div>
             </div>
+            
+            <DarkModeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
             
             <LanguageSwitcher 
               currentLanguage={language} 

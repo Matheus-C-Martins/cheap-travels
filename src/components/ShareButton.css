@@ -1,0 +1,206 @@
+.share-button-container {
+  position: relative;
+}
+
+.share-button {
+  position: absolute;
+  top: 12px;
+  right: 60px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #e1e8ed;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-button:hover {
+  transform: scale(1.15) rotate(10deg);
+  background: #3498db;
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.share-button:hover .share-icon {
+  filter: brightness(0) invert(1);
+}
+
+.share-button:active {
+  transform: scale(0.95);
+}
+
+.share-icon {
+  font-size: 16px;
+  transition: filter 0.3s ease;
+}
+
+.share-tooltip {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #27ae60;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease;
+  z-index: 10;
+}
+
+.share-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #27ae60;
+}
+
+.share-fallback-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 200px;
+  animation: slideDown 0.2s ease;
+}
+
+.share-fallback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 2px solid #e1e8ed;
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.share-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #95a5a6;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.share-close:hover {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.share-options {
+  padding: 8px;
+}
+
+.share-option {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-option:hover {
+  background: #f8f9fa;
+  transform: translateX(4px);
+}
+
+.share-option:active {
+  transform: translateX(2px);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode support */
+.dark-mode .share-button {
+  background: rgba(22, 33, 62, 0.95);
+  border-color: #0f3460;
+}
+
+.dark-mode .share-button:hover {
+  background: #4a9eff;
+  border-color: #4a9eff;
+}
+
+.dark-mode .share-fallback-menu {
+  background: #16213e;
+  border-color: #0f3460;
+}
+
+.dark-mode .share-fallback-header {
+  border-bottom-color: #0f3460;
+  color: #eaeaea;
+}
+
+.dark-mode .share-close:hover {
+  background: #0f3460;
+  color: #eaeaea;
+}
+
+.dark-mode .share-option {
+  color: #eaeaea;
+}
+
+.dark-mode .share-option:hover {
+  background: #0f3460;
+}
+
+@media (max-width: 768px) {
+  .share-button {
+    width: 32px;
+    height: 32px;
+    right: 52px;
+  }
+  
+  .share-icon {
+    font-size: 14px;
+  }
+  
+  .share-fallback-menu {
+    right: -10px;
+  }
+}
