@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import FavoriteButton from './FavoriteButton';
+import ShareButton from './ShareButton';
 import './DealCard.css';
 
 function DealCard({ deal, t, isFavorite, onToggleFavorite }) {
@@ -13,6 +14,9 @@ function DealCard({ deal, t, isFavorite, onToggleFavorite }) {
         isFavorite={isFavorite}
         onToggle={onToggleFavorite}
       />
+      
+      {/* Share Button */}
+      <ShareButton deal={deal} t={t} />
       
       {/* Badge de Desconto */}
       <div className="discount-badge">
@@ -111,6 +115,7 @@ DealCard.propTypes = {
     originalPrice: PropTypes.number.isRequired,
     currentPrice: PropTypes.number.isRequired,
     url: PropTypes.string.isRequired,
+    link: PropTypes.string,
   }).isRequired,
   t: PropTypes.func.isRequired,
   isFavorite: PropTypes.bool.isRequired,
