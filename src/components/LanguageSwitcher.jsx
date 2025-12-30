@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { languageNames, supportedLanguages } from '../i18n/translations';
 import './LanguageSwitcher.css';
 
@@ -19,5 +20,10 @@ function LanguageSwitcher({ currentLanguage, onLanguageChange }) {
     </div>
   );
 }
+
+LanguageSwitcher.propTypes = {
+  currentLanguage: PropTypes.string.isRequired,
+  onLanguageChange: PropTypes.func.isRequired,
+};
 
 export default LanguageSwitcher;

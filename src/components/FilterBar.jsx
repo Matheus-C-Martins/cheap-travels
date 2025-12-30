@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import './FilterBar.css';
 
 function FilterBar({ filter, setFilter, sortBy, setSortBy, t }) {
@@ -31,5 +32,13 @@ function FilterBar({ filter, setFilter, sortBy, setSortBy, t }) {
     </div>
   );
 }
+
+FilterBar.propTypes = {
+  filter: PropTypes.string.isRequired,
+  setFilter: PropTypes.func.isRequired,
+  sortBy: PropTypes.string.isRequired,
+  setSortBy: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+};
 
 export default FilterBar;

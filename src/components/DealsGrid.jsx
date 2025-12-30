@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import DealCard from './DealCard';
 import './DealsGrid.css';
 
@@ -43,5 +44,15 @@ function DealsGrid({ deals, loading, t }) {
     </div>
   );
 }
+
+DealsGrid.propTypes = {
+  deals: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  loading: PropTypes.bool.isRequired,
+  t: PropTypes.func.isRequired,
+};
 
 export default DealsGrid;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import './DealCard.css';
 
 function DealCard({ deal, t }) {
@@ -85,5 +86,24 @@ function DealCard({ deal, t }) {
     </div>
   );
 }
+
+DealCard.propTypes = {
+  deal: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    discount: PropTypes.number.isRequired,
+    source: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    origin: PropTypes.string,
+    destination: PropTypes.string.isRequired,
+    departureDate: PropTypes.string.isRequired,
+    stops: PropTypes.number,
+    duration: PropTypes.number,
+    currency: PropTypes.string.isRequired,
+    originalPrice: PropTypes.number.isRequired,
+    currentPrice: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
+  }).isRequired,
+  t: PropTypes.func.isRequired,
+};
 
 export default DealCard;
