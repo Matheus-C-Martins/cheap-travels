@@ -5,16 +5,19 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import SearchBar from './components/SearchBar';
 import ScrollToTop from './components/ScrollToTop';
 import { useTranslation } from './hooks/useTranslation';
+import { useFavorites } from './hooks/useFavorites';
 import './App.css';
 
 function App() {
   const { t, language, changeLanguage } = useTranslation();
+  const { favorites, toggleFavorite, isFavorite, favoritesCount } = useFavorites();
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('discount');
+  const [showFavorites, setShowFavorites] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [stats, setStats] = useState({ flights: 0, cruises: 0 });
   const [loadingTimeout, setLoadingTimeout] = useState(false);
@@ -75,6 +78,9 @@ function App() {
   useEffect(() => {
     let result = [...deals];
 
+    // Favorites filter
+    if (showFavorites) {
+      result = result.filter(deal => isFavorite(deal.id));
     // Search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
@@ -109,7 +115,7 @@ function App() {
     });
 
     setFilteredDeals(result);
-  }, [deals, filter, sortBy, searchTerm]);
+  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite]);
 
   useEffect(() => {
     const flights = deals.filter(d => d.type === 'flight').length;
@@ -173,6 +179,16 @@ function App() {
         ) : (
           <>
             {!loading && (
+              <FilterBar
+                filter={filter}
+                setFilter={setFilter}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                showFavorites={showFavorites}
+                setShowFavorites={setShowFavorites}
+                favoritesCount={favoritesCount}
+                t={t}
+              />
               <>
                 <SearchBar 
                   searchTerm={searchTerm}
@@ -204,7 +220,13 @@ function App() {
               </div>
             )}
             
-            <DealsGrid deals={filteredDeals} loading={loading} t={t} />
+            <DealsGrid 
+              deals={filteredDeals} 
+              loading={loading} 
+              t={t}
+              isFavorite={isFavorite}
+              onToggleFavorite={toggleFavorite}
+            />
           </>
         )}
       </main>

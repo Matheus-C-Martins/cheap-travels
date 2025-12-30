@@ -7,6 +7,10 @@ export const translations = {
     cruises: 'Cruises',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favorites',
+    showFavorites: 'Show Favorites',
+    showAll: 'Show All',
     // Search
     searchPlaceholder: 'Search destinations, cities, countries...',
     resultsFound: 'results found',
@@ -65,6 +69,10 @@ export const translations = {
     cruises: 'Cruzeiros',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favoritos',
+    showFavorites: 'Ver Favoritos',
+    showAll: 'Ver Todos',
     // Search
     searchPlaceholder: 'Buscar destinos, cidades, pa\u00edses...',
     resultsFound: 'resultados encontrados',
@@ -123,6 +131,10 @@ export const translations = {
     cruises: 'Croisi\u00e8res',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favoris',
+    showFavorites: 'Afficher Favoris',
+    showAll: 'Tout Afficher',
     // Search
     searchPlaceholder: 'Rechercher des destinations, villes, pays...',
     resultsFound: 'r\u00e9sultats trouv\u00e9s',
@@ -181,6 +193,10 @@ export const translations = {
     cruises: 'Cruceros',
     total: 'Total',
     
+    // Favorites
+    favorites: 'Favoritos',
+    showFavorites: 'Ver Favoritos',
+    showAll: 'Ver Todos',
     // Search
     searchPlaceholder: 'Buscar destinos, ciudades, pa\u00edses...',
     resultsFound: 'resultados encontrados',
@@ -239,6 +255,10 @@ export const translations = {
     cruises: 'Kreuzfahrten',
     total: 'Gesamt',
     
+    // Favorites
+    favorites: 'Favoriten',
+    showFavorites: 'Favoriten Anzeigen',
+    showAll: 'Alle Anzeigen',
     // Search
     searchPlaceholder: 'Reiseziele, St\u00e4dte, L\u00e4nder suchen...',
     resultsFound: 'Ergebnisse gefunden',
