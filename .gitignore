@@ -23,13 +23,18 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
+# Environment variables - NUNCA COMMITAR
 .env
 .env.local
 .env.production
+.env.*.local
 
 # Testing
 coverage
 
 # Build
 build
+
+# Debug
+debug/
+screenshots/
