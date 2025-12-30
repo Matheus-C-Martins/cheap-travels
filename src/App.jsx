@@ -4,13 +4,16 @@ import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import SearchBar from './components/SearchBar';
 import ScrollToTop from './components/ScrollToTop';
+import DarkModeToggle from './components/DarkModeToggle';
 import { useTranslation } from './hooks/useTranslation';
 import { useFavorites } from './hooks/useFavorites';
+import { useDarkMode } from './hooks/useDarkMode';
 import './App.css';
 
 function App() {
   const { t, language, changeLanguage } = useTranslation();
   const { favorites, toggleFavorite, isFavorite, favoritesCount } = useFavorites();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +84,8 @@ function App() {
     // Favorites filter
     if (showFavorites) {
       result = result.filter(deal => isFavorite(deal.id));
+    }
+
     // Search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
@@ -115,7 +120,7 @@ function App() {
     });
 
     setFilteredDeals(result);
-  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite]);
+  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite, searchTerm]);
 
   useEffect(() => {
     const flights = deals.filter(d => d.type === 'flight').length;
@@ -155,6 +160,8 @@ function App() {
               </div>
             </div>
             
+            <DarkModeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
+            
             <LanguageSwitcher 
               currentLanguage={language} 
               onLanguageChange={changeLanguage}
@@ -179,16 +186,6 @@ function App() {
         ) : (
           <>
             {!loading && (
-              <FilterBar
-                filter={filter}
-                setFilter={setFilter}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                showFavorites={showFavorites}
-                setShowFavorites={setShowFavorites}
-                favoritesCount={favoritesCount}
-                t={t}
-              />
               <>
                 <SearchBar 
                   searchTerm={searchTerm}
@@ -202,6 +199,9 @@ function App() {
                   setFilter={setFilter}
                   sortBy={sortBy}
                   setSortBy={setSortBy}
+                  showFavorites={showFavorites}
+                  setShowFavorites={setShowFavorites}
+                  favoritesCount={favoritesCount}
                   t={t}
                 />
               </>
