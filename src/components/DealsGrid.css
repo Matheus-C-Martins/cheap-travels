@@ -1,6 +1,7 @@
 /* Grid Layout Responsivo */
 .deals-grid-container {
   width: 100%;
+  max-width: 100%;
 }
 
 .deals-count {
@@ -29,9 +30,10 @@
 
 .deals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
   animation: fadeIn 0.5s ease-in-out;
+  width: 100%;
 }
 
 @keyframes fadeIn {
@@ -48,8 +50,9 @@
 /* Skeleton Grid */
 .skeleton-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
+  width: 100%;
 }
 
 .skeleton-card {
@@ -85,14 +88,14 @@
 @media (max-width: 1200px) {
   .deals-grid,
   .skeleton-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .deals-grid,
   .skeleton-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1rem;
   }
   
@@ -111,10 +114,6 @@
 }
 
 @media (max-width: 480px) {
-  .deals-grid-container {
-    padding: 0 0.5rem;
-  }
-  
   .deals-count {
     border-radius: 8px;
     padding: 0.875rem 1rem;
