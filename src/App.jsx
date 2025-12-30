@@ -3,6 +3,7 @@ import FilterBar from './components/FilterBar';
 import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import SearchBar from './components/SearchBar';
+import ScrollToTop from './components/ScrollToTop';
 import { useTranslation } from './hooks/useTranslation';
 import './App.css';
 
@@ -220,6 +221,8 @@ function App() {
           </div>
         </div>
       </footer>
+      
+      <ScrollToTop />
     </div>
   );
 }
