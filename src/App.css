@@ -90,7 +90,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .logo {
@@ -160,7 +166,6 @@ body {
   padding: 2rem 1rem;
 }
 
-/* Todos os elementos dentro do main devem considerar o header sticky */
 .app-main > * {
   scroll-margin-top: calc(var(--header-height) + 1rem);
 }
@@ -407,7 +412,7 @@ body {
 /* Responsive Design - Mobile First */
 @media (max-width: 768px) {
   :root {
-    --header-height: 160px;
+    --header-height: 200px;
   }
   
   .app-header {
@@ -417,6 +422,13 @@ body {
   .header-content {
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
+  }
+  
+  .header-right {
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
   }
   
   .logo-text h1 {
