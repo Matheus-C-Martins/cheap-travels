@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import './ShareButton.css';
 
 function ShareButton({ deal, t }) {
@@ -19,15 +20,15 @@ function ShareButton({ deal, t }) {
       } catch (err) {
         if (err.name !== 'AbortError') {
           console.error('Error sharing:', err);
-          fallbackShare(shareData);
+          fallbackShare();
         }
       }
     } else {
-      fallbackShare(shareData);
+      fallbackShare();
     }
   };
 
-  const fallbackShare = (data) => {
+  const fallbackShare = () => {
     setShowFallback(true);
     setTimeout(() => setShowFallback(false), 3000);
   };
@@ -122,5 +123,15 @@ function ShareButton({ deal, t }) {
     </div>
   );
 }
+
+ShareButton.propTypes = {
+  deal: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    discount: PropTypes.number.isRequired,
+    link: PropTypes.string,
+  }).isRequired,
+  t: PropTypes.func,
+};
 
 export default ShareButton;
