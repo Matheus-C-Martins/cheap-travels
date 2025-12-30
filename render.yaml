@@ -7,7 +7,7 @@ services:
     region: oregon
     plan: free
     rootDir: api
-    buildCommand: npm install
+    buildCommand: cd /opt/render/project/src/api && npm install
     startCommand: npm start
     envVars:
       - key: NODE_ENV
@@ -22,16 +22,3 @@ services:
         value: 300
     healthCheckPath: /api/health
     autoDeploy: true
-
-  # Frontend (Opcional - se não usar GitHub Pages)
-  # - type: web
-  #   name: cheap-travels-frontend
-  #   runtime: static
-  #   buildCommand: npm install && npm run build
-  #   staticPublishPath: ./dist
-  #   envVars:
-  #     - key: VITE_API_URL
-  #       fromService:
-  #         type: web
-  #         name: cheap-travels-api
-  #         property: url
