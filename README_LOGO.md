@@ -1,57 +1,78 @@
 # Logo Setup Instructions
 
-## Adding the Custom Logo
+## ✅ Quick Setup
 
-To add the custom Cheap Travels logo to the application:
+The app is configured to use `public/logo.png` as the favicon.
 
-### Option 1: Use the generated PNG
+### Adding the Logo:
 
-1. **Download the logo image:**
-   - URL: https://user-gen-media-assets.s3.amazonaws.com/seedream_images/0e6de77e-1356-4b40-b20d-9042d8091666.png
+1. **Save your logo image as `public/logo.png`**
+   - Use the airplane with discount tag image (logo.jpg)
+   - Recommended size: 512x512px or larger
+   - Format: PNG with transparent background (or white)
 
-2. **Save as `public/logo.png`**
+2. **Done!** The `index.html` is already configured:
+   ```html
+   <link rel="icon" type="image/png" href="/logo.png" />
+   ```
 
-3. **The index.html is already configured to use it!**
+## 📁 File Location
 
-### Option 2: Use the SVG (included)
-
-- A vector SVG logo is included at `public/logo.svg`
-- You can edit colors/design directly in the SVG file
-- Change `index.html` to use: `<link rel="icon" type="image/svg+xml" href="/logo.svg" />`
-
-## Logo Files
-
-### Favicon (Browser Tab)
-- `public/logo.png` or `public/logo.svg`
-- Shows in browser tabs and bookmarks
-
-### App Logo (Header)
-- Currently using emoji: ✈️
-- To use custom logo, update `src/App.jsx`:
-  ```jsx
-  <img src="/logo.svg" alt="Cheap Travels" className="logo-icon" />
-  ```
-
-## Colors Used
-
-- **Primary Blue:** `#3498db` (airplane)
-- **Turquoise:** `#1abc9c` (price tag)
-- **Dark Blue:** `#2980b9` (shadows)
-
-## Customization
-
-Edit `public/logo.svg` to customize:
-- Change colors in `fill` attributes
-- Adjust airplane angle in `rotate()` transform
-- Resize elements by changing viewBox
-
-## Quick Setup
-
-```bash
-# Download the PNG logo
-curl -o public/logo.png https://user-gen-media-assets.s3.amazonaws.com/seedream_images/0e6de77e-1356-4b40-b20d-9042d8091666.png
-
-# Or just use the included SVG - it's already configured!
+```
+project/
+├── public/
+│   └── logo.png  ← Add your logo here
+├── index.html    ← Already configured ✅
+└── src/
 ```
 
-The app will automatically use the logo once the file is in place!
+## 🎨 Logo Design
+
+The logo should feature:
+- ✈️ Blue airplane
+- 🏷️ Turquoise/cyan discount tag with % symbol
+- Clean, professional design
+- Works well at small sizes (favicon)
+
+## 🖼️ Recommended Specifications
+
+- **Format:** PNG
+- **Size:** 512x512px (will be scaled automatically)
+- **Background:** Transparent or white
+- **Colors:** Blue (#0066FF) and Turquoise (#00D4C8)
+
+## 🚀 Using the Logo
+
+### As Favicon (Browser Tab)
+✅ **Already configured!** Just add `public/logo.png`
+
+### In App Header (Optional)
+
+To use the logo in the header instead of emoji:
+
+```jsx
+// In src/App.jsx
+// Replace:
+<span className="logo-icon" aria-hidden="true">✈️</span>
+
+// With:
+<img src="/logo.png" alt="" className="logo-icon" aria-hidden="true" style={{width: '32px', height: '32px'}} />
+```
+
+## 📝 Notes
+
+- Logo will appear in browser tabs automatically
+- No additional configuration needed
+- Just place your PNG file in `public/logo.png`
+- The app will use it immediately after deployment
+
+## 🔄 Alternative: SVG
+
+If you prefer SVG (included in the repo):
+1. Change `index.html` to: `href="/logo.svg"`
+2. SVG is vector-based and scales perfectly
+3. Edit `public/logo.svg` to customize
+
+---
+
+**Current setup:** Uses `logo.png` ✅
