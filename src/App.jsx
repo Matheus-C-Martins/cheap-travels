@@ -4,9 +4,11 @@ import DealsGrid from './components/DealsGrid';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import SearchBar from './components/SearchBar';
 import ScrollToTop from './components/ScrollToTop';
+import SkipLink from './components/SkipLink';
 import { useTranslation } from './hooks/useTranslation';
 import { useFavorites } from './hooks/useFavorites';
 import './App.css';
+import './styles/accessibility.css';
 
 function App() {
   const { t, language, changeLanguage } = useTranslation();
@@ -81,6 +83,8 @@ function App() {
     // Favorites filter
     if (showFavorites) {
       result = result.filter(deal => isFavorite(deal.id));
+    }
+
     // Search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
@@ -115,7 +119,7 @@ function App() {
     });
 
     setFilteredDeals(result);
-  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite]);
+  }, [deals, filter, sortBy, showFavorites, favorites, isFavorite, searchTerm]);
 
   useEffect(() => {
     const flights = deals.filter(d => d.type === 'flight').length;
@@ -129,10 +133,12 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
+      <SkipLink />
+      
+      <header className="app-header" role="banner">
         <div className="header-content">
-          <a href="/" className="logo">
-            <span className="logo-icon">✈️</span>
+          <a href="/" className="logo" aria-label={`${t('appName')} - ${t('tagline')}`}>
+            <span className="logo-icon" aria-hidden="true">✈️</span>
             <div className="logo-text">
               <h1>{t('appName')}</h1>
               <p className="logo-tagline">{t('tagline')}</p>
@@ -140,7 +146,7 @@ function App() {
           </a>
           
           <div className="header-right">
-            <div className="header-stats">
+            <div className="header-stats" role="status" aria-live="polite">
               <div className="stat-item">
                 <span className="stat-value">{stats.flights}</span>
                 <span className="stat-label">{t('flights')}</span>
@@ -163,32 +169,26 @@ function App() {
         </div>
       </header>
 
-      <main className="app-main">
+      <main className="app-main" id="main-content" role="main">
         {error ? (
-          <div className="error-container">
-            <div className="error-icon">⚠️</div>
+          <div className="error-container" role="alert" aria-live="assertive">
+            <div className="error-icon" aria-hidden="true">⚠️</div>
             <h2 className="error-title">{t('errorTitle')}</h2>
             <p className="error-message">{error}</p>
-            <button onClick={handleRetry} className="retry-button">
-              ⟳ {t('retryButton')}
+            <button 
+              onClick={handleRetry} 
+              className="retry-button"
+              aria-label={t('retryButton')}
+            >
+              <span aria-hidden="true">⟳</span> {t('retryButton')}
             </button>
             <p className="error-hint">
-              💡 <strong>{t('errorHint').split(':')[0]}:</strong> {t('errorHint').split(':')[1]}
+              <span aria-hidden="true">💡</span> <strong>{t('errorHint').split(':')[0]}:</strong> {t('errorHint').split(':')[1]}
             </p>
           </div>
         ) : (
           <>
             {!loading && (
-              <FilterBar
-                filter={filter}
-                setFilter={setFilter}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                showFavorites={showFavorites}
-                setShowFavorites={setShowFavorites}
-                favoritesCount={favoritesCount}
-                t={t}
-              />
               <>
                 <SearchBar 
                   searchTerm={searchTerm}
@@ -202,17 +202,25 @@ function App() {
                   setFilter={setFilter}
                   sortBy={sortBy}
                   setSortBy={setSortBy}
+                  showFavorites={showFavorites}
+                  setShowFavorites={setShowFavorites}
+                  favoritesCount={favoritesCount}
                   t={t}
                 />
               </>
             )}
             
             {loading && loadingTimeout && (
-              <div className="loading-timeout-message">
-                <div className="timeout-icon">⏳</div>
+              <div 
+                className="loading-timeout-message" 
+                role="status" 
+                aria-live="polite"
+                aria-busy="true"
+              >
+                <div className="timeout-icon" aria-hidden="true">⏳</div>
                 <h3 className="timeout-title">{t('loadingTimeout')}</h3>
                 <p className="timeout-text">{t('loadingTimeoutText')}</p>
-                <div className="timeout-dots">
+                <div className="timeout-dots" aria-hidden="true">
                   <span className="dot"></span>
                   <span className="dot"></span>
                   <span className="dot"></span>
@@ -231,16 +239,22 @@ function App() {
         )}
       </main>
 
-      <footer className="app-footer">
+      <footer className="app-footer" role="contentinfo">
         <div className="footer-content">
           <p className="footer-text">{t('footerText')}</p>
-          <div className="footer-links">
-            <a href="https://github.com/Matheus-C-Martins/cheap-travels" className="footer-link" target="_blank" rel="noopener noreferrer">
+          <nav className="footer-links" aria-label="Footer navigation">
+            <a 
+              href="https://github.com/Matheus-C-Martins/cheap-travels" 
+              className="footer-link" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label={`${t('github')} (opens in new tab)`}
+            >
               {t('github')}
             </a>
             <a href="#" className="footer-link">{t('about')}</a>
             <a href="#" className="footer-link">{t('contact')}</a>
-          </div>
+          </nav>
         </div>
       </footer>
       
