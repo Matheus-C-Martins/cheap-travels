@@ -8,7 +8,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true
+    sourcemap: false, // Disable sourcemaps in production to reduce build size and time
+    minify: 'esbuild', // Use esbuild for faster minification
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined // Avoid complex chunking to reduce memory usage
+      }
+    }
   },
   server: {
     port: 3000,

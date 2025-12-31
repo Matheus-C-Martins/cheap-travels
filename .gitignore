@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -23,18 +29,19 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables - NUNCA COMMITAR
-.env
-.env.local
-.env.production
-.env.*.local
+# Build outputs
+build
+.cache
+.parcel-cache
+
+# Deployment
+.vercel
+.netlify
 
 # Testing
 coverage
+.nyc_output
 
-# Build
-build
-
-# Debug
-debug/
-screenshots/
+# Misc
+.temp
+.tmp
