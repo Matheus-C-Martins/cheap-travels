@@ -5,10 +5,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: |
-      cd api && \
-      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install --prefer-offline --no-audit && \
-      npx puppeteer browsers install chrome
+    buildCommand: cd api && PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install --prefer-offline --no-audit && npx puppeteer browsers install chrome
     startCommand: cd api && node server.js
     envVars:
       - key: NODE_ENV
