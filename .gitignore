@@ -42,6 +42,9 @@ build
 coverage
 .nyc_output
 
+# Puppeteer
+.local-chromium
+
 # Misc
 .temp
 .tmp

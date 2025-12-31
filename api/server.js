@@ -1,95 +1,69 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import dealsRouter from './routes/deals.js';
-import { startScheduledScraping } from './services/scheduler.js';
-import { rateLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 10000;
 
-// Configuração de CORS
+// Security middleware
+app.use(helmet());
+
+// CORS configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || '*',
-  methods: ['GET', 'POST'],
-  credentials: true,
-  optionsSuccessStatus: 200
+  origin: [
+    'https://cheap-travels-frontend.onrender.com',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
+  credentials: true
 };
-
-// Middleware de segurança
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(rateLimiter);
 
-// Logging em produção
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
 });
+app.use('/api/', limiter);
 
-// Rotas
-app.use('/api/deals', dealsRouter);
+// Body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'API funcionando',
+  res.status(200).json({ 
+    status: 'ok', 
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    memory: process.memoryUsage()
   });
 });
 
-app.get('/', (req, res) => {
-  res.json({
-    name: 'Cheap Travels API',
-    version: '1.0.0',
-    description: 'Sistema de rastreamento de ofertas de viagens',
-    endpoints: {
-      health: '/api/health',
-      allDeals: '/api/deals',
-      flights: '/api/deals/flights',
-      cruises: '/api/deals/cruises'
-    },
-    documentation: 'https://github.com/Matheus-C-Martins/cheap-travels'
-  });
+// API routes
+app.use('/api/deals', dealsRouter);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
-// Error handling
-app.use((err, req, res) => {
-  console.error('Erro:', err);
-  res.status(500).json({
-    success: false,
-    error: 'Erro interno do servidor',
+// Error handler
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ 
+    error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: 'Endpoint não encontrado',
-    path: req.path
-  });
-});
-
-// Iniciar scraping agendado
-startScheduledScraping();
-
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log('\n' + '='.repeat(50));
-  console.log('🚀 Cheap Travels API');
-  console.log('='.repeat(50));
-  console.log(`🌍 Servidor: http://localhost:${PORT}`);
-  console.log(`📅 Iniciado: ${new Date().toLocaleString('pt-BR')}`);
-  console.log(`⚙️  Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔍 Scraping: Ativo (a cada ${process.env.SCRAPE_INTERVAL_MINUTES || 30} minutos)`);
-  console.log('='.repeat(50) + '\n');
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+  console.log(`💾 Memory limit: ${process.env.NODE_OPTIONS}`);
 });
 
 export default app;

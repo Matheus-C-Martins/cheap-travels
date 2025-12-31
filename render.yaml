@@ -1,16 +1,42 @@
 services:
-  # Static frontend service optimized for Render free tier
+  # Backend API with Puppeteer for web scraping
   - type: web
-    name: cheap-travels
+    name: cheap-travels-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: |
+      cd api && \
+      npm ci --production=false --prefer-offline --no-audit && \
+      npx puppeteer browsers install chrome
+    startCommand: cd api && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=460
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: "false"
+      - key: PUPPETEER_EXECUTABLE_PATH
+        sync: false
+    healthCheckPath: /api/health
+    
+  # Frontend static site
+  - type: web
+    name: cheap-travels-frontend
     env: static
     region: oregon
     plan: free
-    buildCommand: npm ci --production=false --prefer-offline --no-audit && npm run build
+    buildCommand: npm ci --production=false --prefer-offline --no-audit && NODE_OPTIONS="--max-old-space-size=460" npm run build
     staticPublishPath: ./dist
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
+      - key: VITE_API_URL
+        value: https://cheap-travels-api.onrender.com
       - key: NODE_ENV
         value: production
