@@ -7,7 +7,7 @@ services:
     plan: free
     buildCommand: |
       cd api && \
-      npm install --prefer-offline --no-audit && \
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install --prefer-offline --no-audit && \
       npx puppeteer browsers install chrome
     startCommand: cd api && node server.js
     envVars:
@@ -17,10 +17,6 @@ services:
         value: 10000
       - key: NODE_OPTIONS
         value: --max-old-space-size=460
-      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
-        value: "false"
-      - key: PUPPETEER_EXECUTABLE_PATH
-        sync: false
     healthCheckPath: /api/health
     
   # Frontend static site
