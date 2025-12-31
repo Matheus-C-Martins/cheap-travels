@@ -1,27 +1,16 @@
 services:
+  # Static frontend service optimized for Render free tier
   - type: web
-    name: cheap-travels-api
-    env: node
-    region: oregon
-    plan: free
-    buildCommand: cd api && npm install
-    startCommand: cd api && npm start
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
-        value: true
-      - key: PUPPETEER_EXECUTABLE_PATH
-        value: /usr/bin/chromium-browser
-    healthCheckPath: /api/health
-    
-  - type: web
-    name: cheap-travels-frontend
+    name: cheap-travels
     env: static
     region: oregon
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci --production=false --prefer-offline --no-audit && npm run build
     staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
-      - key: VITE_API_URL
-        sync: false
+      - key: NODE_ENV
+        value: production
